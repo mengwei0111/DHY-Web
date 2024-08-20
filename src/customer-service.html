@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>後台登入</title>
+  <link rel="stylesheet" href="scss/main.scss">
+</head>
+
+<body>
+
+  <%- include("include/header")%>
+    <div class="min-h-screen w-full h-auto bg-cover bg-center flex items-center justify-center"
+      style="background-image: url('./img/img/picture/index/greenbath.png');">
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+      <!-- Breadcrumb navigation -->
+      <nav class="text-sm mb-4">
+        <ol class="list-none p-0 flex items-center">
+          <li class="flex items-center">
+            <a href="#" class="text-gray-500">首頁</a>
+            <span class="mx-2 text-gray-500">&gt;</span>
+          </li>
+          <li class="flex items-center">
+            <a href="#" class="text-gray-500">客服中心</a>
+            <span class="mx-2 text-gray-500">&gt;</span>
+          </li>
+          <li class="flex items-center">
+            <span class="text-gray-700">DIY維護教學</span>
+          </li>
+        </ol>
+      </nav>
+
+      <h1 class="text-3xl font-bold text-center text-blue-800 mb-16">DIY維護教學</h1>
+
+      <!-- Download buttons -->
+      <div class="flex justify-center space-x-4">
+        <button class="text-black font-bold py-2 px-4 rounded">
+          文件下載
+        </button>
+        <button class="text-black font-bold py-2 px-4 rounded">
+          影音下載
+        </button>
+      </div>
+    </div>
+
+    <%- include("include/footer")%>
+
+
+</body>
+
+</html>
