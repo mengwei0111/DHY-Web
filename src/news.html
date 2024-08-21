@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>後台登入</title>
+    <link rel="stylesheet" href="scss/main.scss">
+</head>
+
+<body>
+
+    <%- include("include/header")%>
+        <div class="relative min-h-screen bg-cover bg-center flex items-center"
+            style="background-image: url('./img/img/picture/index/usephone.png');">
+            <div class="absolute inset-0 flex items-center justify-center">
+                <div
+                    class="text-5xl h-40 bg-black bg-opacity-50 text-white  px-4 py-2 w-1/2 text-center flex items-center justify-center">
+                    最新消息
+                </div>
+            </div>
+        </div>
+
+        <div class="px-4 py-8 ml-4">
+            <nav class="mb-4">
+                <ol class="flex text-sm text-gray-500">
+                    <li class="mr-2">首頁</li>
+                    <li class="mr-2">&gt;</li>
+                    <li>最新消息</li>
+                </ol>
+            </nav>
+
+            <article class="space-y-8 ml-8">
+                <h1 class="text-2xl md:text-3xl font-bold text-left text-[#1B3D5C]">
+                    🧨2022虎年行大運，良辰吉時開工囉~~
+                </h1>
+
+                <p class="text-gray-700 text-left">
+                    開工大喜，恭喜發財，財源茂盛，祝你和氣生財得財寶，福旺財旺人氣旺，寶店如同搖錢樹，取之不竭有錢花🧧🎉
+                </p>
+
+            </article>
+            <div class="flex justify-center">
+                <div class="aspect-w-16 aspect-h-9 max-w-4xl">
+                    <img src="./img/img/picture/index/teatime.png" alt="披薩展示"
+                        class="object-cover rounded-lg shadow-md w-full h-full" />
+                </div>
+            </div>
+
+        </div>
+
+        <%- include("include/footer")%>
+
+
+</body>
+
+</html>
