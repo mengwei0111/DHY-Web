@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>後台登入</title>
+  <link rel="stylesheet" href="scss/main.scss">
+</head>
+
+<body>
+
+  <%- include("include/header")%>
+    <div class="relative ">
+      <div class="absolute inset-0">
+        <img class="w-full h-full " src="./img/img/picture/index/greenbath.png" alt="">
+        <div class="absolute inset-0 " aria-hidden="true"></div>
+      </div>
+      <div class="relative  max-w-7xl mx-auto  py-2 px-4 sm:py-32 sm:px-6 lg:px-8">
+        <div class="py-6 text-5xl bg-black bg-opacity-50 text-white  text-center  items-center justify-center">
+          客服中心
+          <div class="h-px mx-auto bg-white w-2/3 my-4"></div>
+          <div class="text-3xl">
+            維修中心
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="container mx-auto px-4 py-8 max-w-3xl">
+      <nav class="text-sm mb-6">
+        <a href="#" class="text-black hover:underline">首頁</a> &gt;
+        <a href="#" class="text-black hover:underline">客服中心</a> &gt;
+        <span class="text-[#1B3D5C]">維修通報</span>
+      </nav>
+
+      <h1 class="text-3xl font-bold text-center mb-8">維修通報</h1>
+
+      <form class="space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center">
+          <label for="reporter" class="w-1/4 block text-sm font-medium text-gray-700 mb-1 sm:mb-0 ">申報人</label>
+          <input type="text" id="reporter" name="reporter"
+            class="flex-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center">
+          <label for="repair-item" class="w-1/4 block text-sm font-medium text-gray-700 sm:mb-0 mb-1">維修事項</label>
+          <input type="text" id="repair-item" name="repair-item"
+            class="flex-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div class="flex flex-col sm:flex-row">
+          <label for="repair-reason" class="sm:w-1/4 text-sm font-medium text-gray-700 mb-1 sm:mb-0 sm:pt-2">維修原因</label>
+          <textarea id="repair-reason" name="repair-reason" rows="4" class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+        </div>
+
+        <div class="flex justify-end space-x-4">
+          <button type="reset"
+            class="px-4 py-2 bg-[#3374AE] text-white rounded-md  focus:outline-none  ">清除</button>
+          <button type="submit"
+            class="px-4 py-2 bg-[#3374AE] text-white rounded-md  focus:outline-none  ">送出</button>
+        </div>
+      </form>
+    </div>
+
+    <%- include("include/footer")%>
+
+
+</body>
+
+</html>
