@@ -31,34 +31,35 @@
         .done(function(msg) {
 
           // 資料載入
-          if (Array.isArray(msg) && msg.length > 0) {
+          if (Array.isArray(msg)) {
+            // 第一個新聞標題
+            $('#news-1').text(msg[0] && msg[0].title ? msg[0].title : '無可用的新聞標題');
+            $('#description-1').text(msg[0] && msg.description ? msg[0].description : '無可用內容');
+            $('#imgUrl-1').attr("src", msg[0] && msg[0].imgUrl ? msg[0].imgUrl : 'http://localhost:5173/img/img/picture/index/new-3.jpg');
+            // 第二個新聞標題
+            $('#news-2').text(msg[1] && msg[1].title ? msg[1].title : '無可用的新聞標題');
+            $('#description-2').text(msg[1] && msg[1].description ? msg[1].description : '無可用內容');
+            $('#imgUrl-2').attr("src", msg[1] && msg[1].imgUrl ? msg[1].imgUrl : 'http://localhost:5173/img/img/picture/index/new-3.jpg');
+            // 第三個新聞標題
+            $('#news-3').text(msg[2] && msg[2].title ? msg[2].title : '無可用的新聞標題');
+            $('#description-3').text(msg[2] && msg[2].description ? msg[2].description : '無可用內容');
+            $('#imgUrl-3').attr("src", msg[2] && msg[2].imgUrl ? msg[2].imgUrl : 'http://localhost:5173/img/img/picture/index/new-3.jpg');
 
-            // 第一個訊息標題(因為>0所以第一筆一定有)
-            $('#news-1').text(msg[0].title);
-            $('#description-1').text(msg[0].description);
-            $('#imgUrl-1').attr("src", msg[0].imgUrl);
-
-            // 第二個訊息標題(如果沒有資料，會顯示無可用出來)
-            $('#news-2').text(msg[1] ? msg[1].title : '無可用的新聞標題');
-            $('#description-2').text(msg[1] ? msg[1].description : '無可用內容');
-            $('#imgUrl-2').attr("src", msg[1] ? msg[1].imgUrl : 'http://localhost:5173/img/img/picture/index/new-3.jpg');
-
-            // 第三個訊息標題(如果沒有資料，會顯示無可用出來)
-            $('#news-3').text(msg[2] ? msg[2].title : '無可用的新聞標題');
-            $('#description-3').text(msg[2] ? msg[2].description : '無可用內容');
-            $('#imgUrl-3').attr("src", msg[2] ? msg[2].imgUrl : 'http://localhost:5173/img/img/picture/index/new-3.jpg');
-
-            $('#news').show(); //顯示最新消息區塊
-
-          } else { //沒資料隱藏最新消息區塊
-
+          } else {
+            console.error('返回的資料不是陣列');
+          }
+          // alert(msg.length);
+          //判斷是否隱藏
+          if (msg.length == 0) {
             $('#news').hide();
-
+          } else {
+            $('#news').show();
           }
 
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
           console.error('請求失敗:', textStatus, errorThrown);
+          $('.news-title').text('載入失敗，請稍後再試');
         });
     });
   </script>
