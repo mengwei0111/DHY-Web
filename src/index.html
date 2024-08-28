@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <!-- Initialize Swiper -->
   <script>
     window.onload = function () {
@@ -20,6 +21,24 @@
         },
       });
     } 
+
+    $(document).ready(function() {
+  $.ajax({
+  method: "GET",
+  url: "http://u-shane.fun:3000/news",
+ 
+})
+  .done(function( msg ) {
+    console.log('全部:',msg);
+    // var title1 = msg [0].title;
+    // var title2 = msg [1].title;
+    // var title3 = msg [2].title;
+    $('#news-1').text(msg [0].title);
+    $('#news-2').text(title2);
+    $('#news-3').text(title3);
+  });
+});
+
   </script>
 </head>
 
@@ -92,7 +111,7 @@
           <div>
             <img src="./img/img/picture/index/new-3.jpg" alt="最新消息（一）" class="w-full h-[214px] object-cover">
             <div class="p-4">
-              <h3 class="font-bold text-lg mb-2">最新消息（一）</h3>
+              <h3 id="news-1" class="font-bold text-lg mb-2">最新消息（一）</h3>
               <p class="text-gray-600 text-sm mb-4">可放內容文字，這是測試及示意文字</p>
               <div class="flex">
                 <a href="#" class="ml-auto text-[#3374AE] hover:underline text-sm">read more</a>
@@ -105,7 +124,7 @@
           <div>
             <img src="./img/img/picture/index/news-1.jpg" alt="最新消息（二）" class="w-full h-[214px] object-cover">
             <div class="p-4">
-              <h3 class="font-bold text-lg mb-2">最新消息（二）</h3>
+              <h3 id="news-2" class="font-bold text-lg mb-2">最新消息（二）</h3>
               <p class="text-gray-600 text-sm mb-4">可放內容文字，這是測試及示意文字</p>
               <div class="flex">
                 <a href="#" class="ml-auto text-[#3374AE] hover:underline text-sm">read more</a>
@@ -116,7 +135,7 @@
           <div>
             <img src="./img/img/picture/index/news-2(客戶廠商FB照片).jpg" alt="最新消息（三）" class="w-full h-[214px] object-cover">
             <div class=" p-4">
-              <h3 class="font-bold text-lg mb-2">最新消息（三）</h3>
+              <h3 id="news-3" class="font-bold text-lg mb-2">最新消息（三）</h3>
               <p class="text-gray-600 text-sm mb-4">可放內容文字，這是測試及示意文字</p>
               <div class="flex">
                 <a href="#" class="ml-auto text-[#3374AE] hover:underline text-sm">read more</a>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<div></div>
+</body>
+<script>
+    $(document).ready(function() {
+  $.ajax({
+  method: "GET",
+  url: "http://u-shane.fun:3000/news",
+ 
+})
+  .done(function( msg ) {
+    console.log('全部:',msg);
+    var title = msg [0].title;
+    $('div').append(title)
+  });
+});
+</script>
+
+
+</html>
