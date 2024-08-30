@@ -64,6 +64,17 @@
   </script>
 </head>
 
+<style>
+  .truncate-multiline {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    /* 控制顯示的行數 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: 300px;
+  }
+</style>
+
 <body>
   <%- include("include/header")%>
   <!-- Swiper -->
@@ -126,14 +137,14 @@
     <div class="container mx-auto px-4">
       <h2 class="text-3xl font-bold text-center text-[#3374AE] mb-10">最新消息</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
-
-
-        <div>
-          <img id="imgUrl-1" src="./img/img/picture/index/new-3.jpg" alt="最新消息（一）" class="w-full h-[214px] object-cover">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="w-full flex flex-col items-center">
+          <div class="w-full flex justify-center mb-4">
+            <img id="imgUrl-1" src="./img/img/picture/index/new-3.jpg" alt="最新消息（一）" class="flex items-center w-auto h-[214px]  object-cover">
+          </div>
           <div class="p-4">
-            <h3 id="news-1" class="font-bold text-lg mb-2">最新消息（一）</h3>
-            <p id="description-1" class="text-gray-600 text-sm mb-4">可放內容文字，這是測試及示意文字</p>
+            <h3 id="news-1" class="flex justify-center font-bold text-lg mb-2">最新消息（一）</h3>
+            <p id="description-1" class="text-center truncate-multiline text-gray-600 text-sm mb-4">可放內容文字，這是測試及示意文字</p>
             <div class="flex">
               <a href="#" class="ml-auto text-[#3374AE] hover:underline text-sm">read more</a>
             </div>
@@ -142,24 +153,28 @@
 
 
 
-        <div>
-          <img id="imgUrl-2" src="./img/img/picture/index/news-1.jpg" alt="最新消息（二）" class="w-full h-[214px] object-cover">
+        <div class="w-full flex flex-col items-center">
+          <div class="w-full flex justify-center mb-4">
+            <img id="imgUrl-2" src="./img/img/picture/index/news-1.jpg" alt="最新消息（二）" class="w-auto h-[214px] object-cover">
+          </div>
           <div class="p-4">
-            <h3 id="news-2" class="font-bold text-lg mb-2">最新消息（二）</h3>
-            <p id="description-2" class="text-gray-600 text-sm mb-4">可放內容文字，這是測試及示意文字</p>
+            <h3 id="news-2" class="flex justify-center font-bold text-lg mb-2">最新消息（二）</h3>
+            <p id="description-2" class="text-center truncate-multiline text-gray-600 text-sm mb-4">可放內容文字，這是測試及示意文字</p>
             <div class="flex">
               <a href="#" class="ml-auto text-[#3374AE] hover:underline text-sm">read more</a>
             </div>
           </div>
         </div>
 
-        <div>
-          <img id="imgUrl-3" src="./img/img/picture/index/news-2(客戶廠商FB照片).jpg" alt="最新消息（三）" class="w-full h-[214px] object-cover">
+        <div class="w-full flex flex-col items-center">
+          <div class="w-full flex justify-center mb-4">
+            <img id="imgUrl-3" src="./img/img/picture/index/news-2(客戶廠商FB照片).jpg" alt="最新消息（三）" class="w-auto h-[214px] object-cover">
+          </div>
           <div class=" p-4">
-            <h3 id="news-3" class="font-bold text-lg mb-2">最新消息（三）</h3>
-            <p id="description-3" class="text-gray-600 text-sm mb-4">可放內容文字，這是測試及示意文字</p>
+            <h3 id="news-3" class="flex justify-center font-bold text-lg mb-2">最新消息（三）</h3>
+            <p id="description-3" class="text-center truncate-multiline text-gray-600 text-sm mb-4">可放內容文字，這是測試及示意文字</p>
             <div class="flex">
-              <a href="#" class="ml-auto text-[#3374AE] hover:underline text-sm">read more</a>
+              <a href="#" class="ml-auto  text-[#3374AE] hover:underline text-sm">read more</a>
             </div>
           </div>
         </div>
