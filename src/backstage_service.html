@@ -6,24 +6,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>後台</title>
   <link rel="stylesheet" href="scss/main.scss">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
 </head>
 
 <style>
-  .submenu {
-    max-height: 0;
-    overflow: hidden;
+  html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
   }
-
+  .layout-container {
+      display: flex;
+      min-height: 100vh;
+  }
+  .sidebar {
+      width: 256px; /* w-64 等價於 16rem 或 256px */
+      background-color: #1e3a8a; /* bg-blue-900 */
+      color: white;
+      padding: 1rem;
+      flex-shrink: 0;
+  }
+  .main-content {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      background-color: #f3f4f6; /* bg-gray-100 */
+  }
+  .submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+  }
   .submenu.active {
-    max-height: 500px;
+      max-height: 500px;
   }
 </style>
 
 
-
 <body class="bg-gray-100">
-  <div class="flex h-screen">
-    <div class="w-64 bg-blue-900 text-white p-4">
+  <div class="flex ">
+    <div class="w-64 bg-blue-900 text-white p-4 sidebar">
       <div class="mb-8">
         <div class="w-12 h-12 ">
           <img src="./img/img/picture/index/human.png" alt="">
@@ -74,69 +97,40 @@
     <!-- 客服通報 -->
     <div class="container mx-auto px-4 py-8">
       <h1 class="text-2xl font-bold mb-6">客服管理 > 維修通報查詢</h1>
-
+  
       <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-        <button class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded mb-4 sm:mb-0">
-          + 新增
-        </button>
-        <div class="w-full sm:w-auto">
-          <label for="search" class="sr-only">搜尋</label>
-          <input type="text" id="search" placeholder="搜尋..." class="w-full sm:w-64 px-3 py-2 border border-gray-300 rounded-md">
-        </div>
+          <button class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded mb-4 sm:mb-0">
+              + 新增
+          </button>
+          <div class="w-full sm:w-auto">
+              <label for="search" class="sr-only">搜尋</label>
+              <input type="text" id="search" placeholder="搜尋..." class="w-full sm:w-64 px-3 py-2 border border-gray-300 rounded-md">
+          </div>
       </div>
-
+  
       <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table class="min-w-full table-auto">
-          <thead class="bg-gray-200">
-            <tr>
-              <th class="px-4 py-2 text-left">功能</th>
-              <th class="px-4 py-2 text-left">狀態</th>
-              <th class="px-4 py-2 text-left">申報人</th>
-              <th class="px-4 py-2 text-left">連絡電話</th>
-              <th class="px-4 py-2 text-left">維修事項</th>
-              <th class="px-4 py-2 text-left">維修原因</th>
-              <th class="px-4 py-2 text-left">建立日期</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b">
-              <td class="px-4 py-2">
-                <button class="text-blue-600 hover:text-blue-800 mr-2">完工</button>
-                <button class="text-green-600 hover:text-green-800 mr-2">編輯</button>
-                <button class="text-red-600 hover:text-red-800">刪除</button>
-              </td>
-              <td class="px-4 py-2">回報中</td>
-              <td class="px-4 py-2">徐國傑</td>
-              <td class="px-4 py-2">0922727930</td>
-              <td class="px-4 py-2">新風機VAF</td>
-              <td class="px-4 py-2">新安裝的無法啟動沒動作</td>
-              <td class="px-4 py-2">2024-07-01 04:58:18</td>
-            </tr>
-            <!-- 可以添加更多行 -->
-          </tbody>
-        </table>
+          <table class="min-w-full table-auto">
+              <thead class="bg-gray-200">
+                  <tr>
+                      <th class="px-4 py-2 text-left">功能</th>
+                      <th class="px-4 py-2 text-left">狀態</th>
+                      <th class="px-4 py-2 text-left">申報人</th>
+                      <th class="px-4 py-2 text-left">連絡電話</th>
+                      <th class="px-4 py-2 text-left">維修事項</th>
+                      <th class="px-4 py-2 text-left">維修原因</th>
+                      <th class="px-4 py-2 text-left">建立日期</th>
+                  </tr>
+              </thead>
+              <tbody id="maintenanceTableBody">
+                  <!-- 數據將在這裡動態插入 -->
+              </tbody>
+          </table>
       </div>
-
-      <!-- 分頁控制（如果需要的話） -->
-      <div class="mt-4 flex justify-center">
-        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-          <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-            前一頁
-          </a>
-          <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-            1
-          </a>
-          <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-            2
-          </a>
-          <a href="#" class="relative inline-flex items-center px-2 py-2 mbrounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-            下一頁
-          </a>
-        </nav>
+  
+      <div class="mt-4 flex justify-center pagination">
+          <!-- 分頁控件將在這裡動態生成 -->
       </div>
-    </div>
-
-
+  </div>
   </div>
 </body>
 
@@ -147,6 +141,123 @@
     const icon = button.querySelector('svg');
     icon.classList.toggle('rotate-180');
   }
+
+
+
+  $(document).ready(function() {
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    function fetchAllData() {
+        console.log('Fetching data...');
+        $.ajax({
+            url: 'http://u-shane.fun:3000/service',
+            method: 'GET',
+            headers: {
+                "Authorization": "ian-test"
+            },
+            data: {
+                page: currentPage,
+                limit: itemsPerPage,
+                search: $('#search').val()
+            },
+            success: function(response) {
+                console.log('API Response:', response);
+                renderMaintenanceTable(response);
+                // 如果 API 返回總數，則可以啟用分頁
+                // renderPagination(response.total);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching data:', error);
+                console.log('Status:', status);
+                console.log('Response:', xhr.responseText);
+            }
+        });
+    }
+
+    function renderMaintenanceTable(data) {
+        console.log('Rendering table with data:', data);
+        const $tableBody = $('#maintenanceTableBody');
+        $tableBody.empty(); // 清空現有內容
+
+        $.each(data, function(index, item) {
+            $tableBody.append(`
+                <tr data-id="${item.id}" class="border-b hover:bg-gray-100">
+                    <td class="px-4 py-2">
+                        <button class="text-blue-600 hover:text-blue-800 mr-2">完工</button>
+                        <button class="text-green-600 hover:text-green-800 mr-2">編輯</button>
+                        <button class="text-red-600 hover:text-red-800 delete-btn">刪除</button>
+                    </td>
+                    <td class="px-4 py-2">${item.status ? '<font color="green">已完工</font>' : '<font color="red">未完成</font>'}</td>
+                    <td class="px-4 py-2">${item.name || 'N/A'}</td>
+                    <td class="px-4 py-2">${item.phone || 'N/A'}</td>
+                    <td class="px-4 py-2">${item.matter || 'N/A'}</td>
+                    <td class="px-4 py-2">${item.reason || 'N/A'}</td>
+                    <td class="px-4 py-2">${item.createdDate ? new Date(item.createdDate).toLocaleString() : 'N/A'}</td>
+                </tr>
+            `);
+        });
+    }
+
+    function renderPagination(totalItems) {
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        const $paginationContainer = $('.pagination');
+        $paginationContainer.empty();
+
+        for (let i = 1; i <= totalPages; i++) {
+            $('<button>')
+                .text(i)
+                .addClass('px-3 py-1 mx-1 bg-blue-500 text-white rounded')
+                .on('click', function() {
+                    currentPage = i;
+                    fetchAllData();
+                })
+                .appendTo($paginationContainer);
+        }
+    }
+
+    // 搜索功能
+    $('#search').on('input', function() {
+        currentPage = 1;
+        fetchAllData();
+    });
+
+    // 初始加載數據
+    fetchAllData();
+});
+
+// 刪除api
+
+$(document).ready(function() {
+    // 為所有刪除按鈕添加點擊事件
+    $(document).on('click', '.delete-btn', function() {
+        var row = $(this).closest('tr');
+        var id = row.data('id'); // 假設每行都有一個 data-id 屬性存儲唯一識別符
+
+        if (id === undefined) {
+            console.error('ID 未定義，無法執行刪除操作');
+            return;
+        }
+
+        if (confirm('確定要刪除這條記錄嗎？')) {
+            $.ajax({
+                url: 'http://u-shane.fun:3000/service/:id' + id, 
+                method: 'DELETE',
+                headers: {
+                    "Authorization": "ian-test" 
+                },
+                success: function(response) {
+                    console.log('刪除成功', response);
+                    row.remove(); // 從 DOM 中移除該行
+                },
+                error: function(xhr, status, error) {
+                    console.error('刪除失敗', error);
+                    alert('刪除失敗，請稍後再試');
+                }
+            });
+        }
+    });
+});
 </script>
 
 </html>
