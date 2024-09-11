@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-Hant-TW">
 
 <head>
   <meta charset="UTF-8">
@@ -175,15 +175,58 @@
               {
                 data: null,
                 render: function(data, type, row) {
-                  return '<button class="edit-btn">狀態更新</button> <button class="delete-btn" data-id="' + data._id + '">刪除</button>';
+                  return '<button class="edit-btn" data-id="' + data._id + '">狀態更新</button> <button class="delete-btn" data-id="' + data._id + '">刪除</button>';
                 }
               }
-            ]
+            ],
+            language: {
+              "info":           "本頁顯示 _START_ 到 _END_ 總共 _TOTAL_ 筆",
+              "search": "搜尋:",
+              "lengthMenu":     "顯示 _MENU_ 筆資料",
+              
+            }
           });
 
 
 
         });
+
+        // 狀態更新按鈕的事件處理程序
+        $('#myTable').on('click', '.edit-btn', function() {
+          var id = $(this).data('id');
+          var row = $(this).closest('tr');
+
+          if (confirm('確定要將此筆記錄標記為已完工嗎？')) {
+            var updateSettings = {
+              "url": "http://u-shane.fun:3000/service/" + id,
+              "method": "PATCH",
+              "timeout": 0,
+              "headers": {
+                "authorization": "ian-test",
+                "Content-Type": "application/json"
+              },
+              "data": JSON.stringify({
+                status: true
+              })
+            };
+
+            $.ajax(updateSettings)
+              .done(function(response) {
+                console.log('更新成功:', response);
+                // 更新表格中的狀態顯示
+                var cell = table.cell(row, 4);
+                cell.data(true).draw();
+                // 移除狀態更新按鈕
+                $(row).find('.status-btn').remove();
+                alert('狀態已更新為已完工');
+              })
+              .fail(function(jqXHR, textStatus, errorThrown) {
+                alert('更新失敗，請稍後再試');
+              });
+          }
+        });
+
+
 
 
         $('#myTable').on('click', '.delete-btn', function() {
