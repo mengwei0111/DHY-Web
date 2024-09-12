@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>後台</title>
+  <link rel="stylesheet" href="scss/main.scss">
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.css" />
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+
+</head>
+
+<style>
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .layout-container {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    width: 256px;
+    height: 100vh;
+    /* w-64 等價於 16rem 或 256px */
+    background-color: #1e3a8a;
+    /* bg-blue-900 */
+    color: white;
+    padding: 1rem;
+    flex-shrink: 0;
+  }
+
+  .main-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background-color: #f3f4f6;
+    /* bg-gray-100 */
+  }
+
+  .submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+
+  .submenu.active {
+    max-height: 500px;
+  }
+
+  #myTable thead th {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    /* 調整此值以適應你的需求 */
+    background-color: #f3f4f6;
+    padding: 10px;
+    font-weight: bold;
+  }
+
+
+  #myTable th {
+    max-width: 300px;
+    width: 100px;
+    /* 設置固定寬度 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+
+  #myTable {
+    width: 100%;
+  }
+
+  .dataTables_wrapper {
+    overflow-x: auto;
+  }
+
+  /* 響應式調整 */
+  @media screen and (max-width: 640px) {
+    #myTable thead th {
+      font-size: 14px;
+    }
+  }
+</style>
+
+
+<body class="bg-gray-100">
+  <div class="flex ">
+    <div class="w-64 bg-blue-900 text-white p-4 sidebar">
+      <div class="mb-8">
+        <div class="w-12 h-12 ">
+          <img src="./img/img/picture/index/human.png" alt="">
+        </div>
+        <div class="text-lg">test</div>
+      </div>
+      <nav>
+        <ul>
+          <button>
+            <a href="./backstage_news.html">
+              <li class="mb-4 ">最新消息</li>
+            </a>
+          </button>
+          <li class="mb-4">
+            <button class="flex items-center justify-between w-full text-left" onclick="toggleSubmenu(this)">
+              產品介紹
+              <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <ul class="submenu pl-4 text-sm">
+              <li class="my-4">玻璃系列</li>
+              <li class="my-4">淋浴設備</li>
+              <li class="my-4">衛浴設備</li>
+              <li class="my-4">曬衣架</li>
+              <li class="my-4">隔音地板</li>
+              <li class="my-4">VAF</li>
+
+            </ul>
+          </li>
+          <li>
+            <button class="flex items-center justify-between w-full text-left" onclick="toggleSubmenu(this)">
+              客服管理
+              <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <ul class="submenu pl-4 text-sm">
+              <li class="my-4">維修通報管理</li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="flex-1 p-8 overflow-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">最新消息</h1>
+        <div class="flex space-x-2">
+          <!-- 新增按鈕 -->
+          <button id="addNewsBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">新增</button>
+          <a href="./index.html">
+            <button class="px-4 py-2 bg-blue-900 text-white rounded">登出</button>
+          </a>
+        </div>
+      </div>
+
+      <table id="myTable" class="display w-full">
+        <thead>
+          <tr>
+            <th>功能</th>
+            <th>消息名稱</th>
+            <th>描述文字</th>
+            <th>圖片</th>
+            <th>建立日期</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <!-- 模態框結構 -->
+    <div id="addNewsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden" x-show="open">
+      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+          <h2 class="text-lg leading-6 font-medium text-gray-900">新增消息</h2>
+          <div class="mt-2 px-7 py-3">
+            <form id="addNewsForm" class="space-y-4">
+              <div>
+                <label for="newsTitle" class=" block text-sm font-medium text-gray-700">消息名稱 *</label>
+                <input type="text" id="newsTitle" name="newsTitle" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              </div>
+              <div>
+                <label for="newsDescription" class="block text-sm font-medium text-gray-700">描述文字</label>
+                <textarea id="newsDescription" name="newsDescription" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+              </div>
+              <div>
+                <label for="newsImage" class="block text-sm font-medium text-gray-700">上傳圖片</label>
+                <input type="file" id="newsImage" name="newsImage" accept="image/jpeg,image/png,image/gif,image/svg+xml" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                <p class="mt-1 text-sm text-gray-500">檔案限制: 副檔名(jpg, png, jpeg, gif, svg), 檔案大小最大 20MB</p>
+              </div>
+              <div class="flex justify-end space-x-3">
+                <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition duration-300" id="cancelBtn">清除</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">送出</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <script>
+      var table;
+      var settings = {
+        "url": "http://u-shane.fun:3000/news",
+        "method": "GET",
+        "timeout": 0,
+        "headers": {
+          "authorization": "ian-test"
+        },
+      };
+      $.ajax(settings).done(function(response) {
+        table = $('#myTable').DataTable({
+          data: response,
+          columns: [{
+              data: null,
+              render: function(data, type, row) {
+                return '<button class="edit-btn" data-id="' + data._id + '">編輯</button> <button class="delete-btn" data-id="' + data._id + '">刪除</button>';
+              }
+            },
+            {
+              data: 'title'
+            }, {
+              data: 'description'
+            },
+            {
+              data: "imgUrl",
+              "render": function(data) {
+                //   console.log(data);
+                return '<img src="' + data + '" width="40px" alt="圖片">';
+              }
+            },
+            {
+              data: 'createdDate',
+              render: function(data, type, row) {
+                if (type === 'display' && data) {
+                  return new Date(data).toLocaleString('zh-TW');
+                }
+                return data;
+              }
+            },
+            // {
+            //   data: '_id'
+            // },
+
+          ],
+          language: {
+            "info": "本頁顯示 _START_ 到 _END_ 總共 _TOTAL_ 筆",
+            "search": "搜尋:",
+            "lengthMenu": "顯示 _MENU_ 筆資料",
+
+          }
+        });
+
+
+
+      });
+
+      // 狀態更新按鈕的事件處理程序
+      $('#myTable').on('click', '.edit-btn', function() {
+        var id = $(this).data('id');
+        var row = $(this).closest('tr');
+
+        if (confirm('確定要將此筆記錄標記為已完工嗎？')) {
+          var updateSettings = {
+            "url": "http://u-shane.fun:3000/news/" + id,
+            "method": "PATCH",
+            "timeout": 0,
+            "headers": {
+              "authorization": "ian-test",
+              "Content-Type": "application/json"
+            },
+            "data": JSON.stringify({
+              status: true
+            })
+          };
+
+          $.ajax(updateSettings)
+            .done(function(response) {
+              console.log('更新成功:', response);
+              // 更新表格中的狀態顯示
+              var cell = table.cell(row, 4);
+              cell.data(true).draw();
+              // 移除狀態更新按鈕
+              $(row).find('.status-btn').remove();
+              alert('狀態已更新為已完工');
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+              alert('更新失敗，請稍後再試');
+            });
+        }
+      });
+
+
+
+
+      $('#myTable').on('click', '.delete-btn', function() {
+        var id = $(this).data('id');
+        var row = $(this).closest('tr');
+
+        if (confirm('您確定要刪除此筆記錄嗎？')) {
+          var settings = {
+            "url": "http://u-shane.fun:3000/news/" + id, // 使用動態 ID
+            "method": "DELETE",
+            "timeout": 0,
+            "headers": {
+              "authorization": "ian-test" // 請確保這是正確的授權令牌
+            },
+          };
+
+          $.ajax(settings)
+            .done(function(response) {
+              //console.log('刪除成功:', response);
+              table.row(row).remove().draw(); // 從表格中移除該行
+              alert('記錄已成功刪除');
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+              //console.error('刪除失敗:', textStatus, errorThrown);
+              alert('刪除失敗，請稍後再試');
+            });
+        }
+      });
+    </script>
+
+</body>
+
+<script>
+  function toggleSubmenu(button) {
+    const submenu = button.nextElementSibling;
+    submenu.classList.toggle('active');
+    const icon = button.querySelector('svg');
+    icon.classList.toggle('rotate-180');
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('addNewsModal');
+    const addBtn = document.getElementById('addNewsBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const form = document.getElementById('addNewsForm');
+
+    // 打開模態框
+    addBtn.addEventListener('click', function() {
+      modal.classList.remove('hidden');
+    });
+
+    // 關閉模態框
+    function closeModal() {
+      modal.classList.add('hidden');
+    }
+
+    // 點擊模態框外部關閉
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // 取消按鈕
+    cancelBtn.addEventListener('click', function() {
+      form.reset();
+      closeModal();
+    });
+
+// 表單提交
+$(form).submit(function(e) {
+        e.preventDefault();
+        console.log('表單提交被觸發');
+
+        var formData = {
+            title: $('input[name="newsTitle"]').val(),
+            description: $('textarea[name="newsDescription"]').val(),
+            // 注意：這裡需要處理圖片上傳，可能需要額外的邏輯
+        };
+
+        console.log('處理後的數據:', formData);
+
+        $.ajax({
+            url: 'http://u-shane.fun:3000/news', // 假設這是新聞添加的API端點
+            type: 'POST',
+            contentType: 'application/json',
+            headers: {
+                "authorization": "ian-test"
+            },
+            data: JSON.stringify(formData),
+            success: function(response) {
+                console.log('成功：', response);
+                alert('新聞已成功添加！');
+                form.reset();
+                closeModal();
+            },
+            error: function(xhr, status, error) {
+                console.error('錯誤：', status, error);
+                alert('添加失敗，請稍後再試。錯誤信息：' + error);
+            }
+        });
+    });
+});
+
+</script>
+
+
+</html>

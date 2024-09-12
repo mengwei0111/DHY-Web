@@ -127,6 +127,7 @@
       </table>
 
       <script>
+        $(document).ready( function() {
         var table;
         var settings = {
           "url": "http://u-shane.fun:3000/service",
@@ -187,9 +188,9 @@
             }
           });
 
-
-
         });
+
+      });
 
         // 狀態更新按鈕的事件處理程序
         $('#myTable').on('click', '.edit-btn', function() {
@@ -267,122 +268,6 @@
     icon.classList.toggle('rotate-180');
   }
 
-
-
-  //   $(document).ready(function() {
-  //     let currentPage = 1;
-  //     const itemsPerPage = 10;
-
-  //     function fetchAllData() {
-  //         console.log('Fetching data...');
-  //         $.ajax({
-  //             url: 'http://u-shane.fun:3000/service',
-  //             method: 'GET',
-  //             headers: {
-  //                 "Authorization": "ian-test"
-  //             },
-  //             data: {
-  //                 page: currentPage,
-  //                 limit: itemsPerPage,
-  //                 search: $('#search').val()
-  //             },
-  //             success: function(response) {
-  //                 console.log('API Response:', response);
-  //                 renderMaintenanceTable(response);
-  //                 // 如果 API 返回總數，則可以啟用分頁
-  //                 // renderPagination(response.total);
-  //             },
-  //             error: function(xhr, status, error) {
-  //                 console.error('Error fetching data:', error);
-  //                 console.log('Status:', status);
-  //                 console.log('Response:', xhr.responseText);
-  //             }
-  //         });
-  //     }
-
-  //     function renderMaintenanceTable(data) {
-  //         console.log('Rendering table with data:', data);
-  //         const $tableBody = $('#maintenanceTableBody');
-  //         $tableBody.empty(); // 清空現有內容
-
-  //         $.each(data, function(index, item) {
-  //             $tableBody.append(`
-  //                 <tr data-id="${item.id}" class="border-b hover:bg-gray-100">
-  //                     <td class="px-4 py-2">
-  //                         <button class="text-blue-600 hover:text-blue-800 mr-2">完工</button>
-  //                         <button class="text-green-600 hover:text-green-800 mr-2">編輯</button>
-  //                         <button class="text-red-600 hover:text-red-800 delete-btn">刪除</button>
-  //                     </td>
-  //                     <td class="px-4 py-2">${item.status ? '<font color="green">已完工</font>' : '<font color="red">未完成</font>'}</td>
-  //                     <td class="px-4 py-2">${item.name || 'N/A'}</td>
-  //                     <td class="px-4 py-2">${item.phone || 'N/A'}</td>
-  //                     <td class="px-4 py-2">${item.matter || 'N/A'}</td>
-  //                     <td class="px-4 py-2">${item.reason || 'N/A'}</td>
-  //                     <td class="px-4 py-2">${item.createdDate ? new Date(item.createdDate).toLocaleString() : 'N/A'}</td>
-  //                 </tr>
-  //             `);
-  //         });
-  //     }
-
-  //     function renderPagination(totalItems) {
-  //         const totalPages = Math.ceil(totalItems / itemsPerPage);
-  //         const $paginationContainer = $('.pagination');
-  //         $paginationContainer.empty();
-
-  //         for (let i = 1; i <= totalPages; i++) {
-  //             $('<button>')
-  //                 .text(i)
-  //                 .addClass('px-3 py-1 mx-1 bg-blue-500 text-white rounded')
-  //                 .on('click', function() {
-  //                     currentPage = i;
-  //                     fetchAllData();
-  //                 })
-  //                 .appendTo($paginationContainer);
-  //         }
-  //     }
-
-  //     // 搜索功能
-  //     $('#search').on('input', function() {
-  //         currentPage = 1;
-  //         fetchAllData();
-  //     });
-
-  //     // 初始加載數據
-  //     fetchAllData();
-  // });
-
-  // // 刪除api
-
-  // $(document).ready(function() {
-  //     // 為所有刪除按鈕添加點擊事件
-  //     $(document).on('click', '.delete-btn', function() {
-  //         var row = $(this).closest('tr');
-  //         var id = row.data('id'); // 假設每行都有一個 data-id 屬性存儲唯一識別符
-
-  //         if (id === undefined) {
-  //             console.error('ID 未定義，無法執行刪除操作');
-  //             return;
-  //         }
-
-  //         if (confirm('確定要刪除這條記錄嗎？')) {
-  //             $.ajax({
-  //                 url: 'http://u-shane.fun:3000/service/:id' + id, 
-  //                 method: 'DELETE',
-  //                 headers: {
-  //                     "Authorization": "ian-test" 
-  //                 },
-  //                 success: function(response) {
-  //                     console.log('刪除成功', response);
-  //                     row.remove(); // 從 DOM 中移除該行
-  //                 },
-  //                 error: function(xhr, status, error) {
-  //                     console.error('刪除失敗', error);
-  //                     alert('刪除失敗，請稍後再試');
-  //                 }
-  //             });
-  //         }
-  //     });
-  // });
 </script>
 
 </html>

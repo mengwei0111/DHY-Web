@@ -4,64 +4,63 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" href="/favicon.ico" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>後台登入</title>
   <link rel="stylesheet" href="scss/main.scss">
 </head>
 
 <body>
-
   <%- include("include/header")%>
-
   <div class="min-h-screen w-full bg-cover bg-center flex items-center justify-center" style="background-image: url('./img/img/picture/index/bathpic.png');">
-    <div class="w-full max-w-2xl mx-auto"> <!-- Increased max-width -->
-      <form class="px-8 pt-6 pb-8 mb-4">
+    <div class="w-full max-w-2xl mx-auto">
+      <form id="loginForm" class="px-8 pt-6 pb-8 mb-4">
         <div class="mb-20 text-center">
           <h2 class="text-[48px] font-bold text-white  flex justify-center ">後台登入</h2>
         </div>
         <div class="mb-12 flex items-center justify-center">
-          <div class="w-full max-w-md flex items-center"> <!-- New container for centering -->
+          <div class="w-full max-w-md flex items-center">
             <label class="block text-white text-[30px] font-bold w-1/4 " for="username">
               帳號
             </label>
             <div class="w-2/3">
-              <input
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-40"
-                id="username" type="text">
+              <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-40" id="username" type="text">
             </div>
           </div>
         </div>
         <div class="mb-12 flex items-center justify-center">
-          <div class="w-full max-w-md flex items-center"> <!-- New container for centering -->
+          <div class="w-full max-w-md flex items-center">
             <label class="block text-white text-[30px] font-bold w-1/4 " for="password">
               密碼
             </label>
             <div class="w-2/3">
-              <input
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-40"
-                id="password" type="password">
+              <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-40" id="password" type="password">
             </div>
           </div>
         </div>
         <div class="flex items-center justify-center">
-          <button
-            class="bg-[#3374AE] hover:bg-blue-700 text-white font-bold text-center py-2 px-6 rounded focus:outline-none focus:shadow-outline w-auto tracking-wide"
-            type="button">
+          <button class="bg-[#3374AE] hover:bg-blue-700 text-white font-bold text-center py-2 px-6 rounded focus:outline-none focus:shadow-outline w-auto tracking-wide" type="submit">
             登入
           </button>
         </div>
       </form>
     </div>
   </div>
+  <%- include("include/footer")%>
 
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
 
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
 
-
-
-    <%- include("include/footer")%>
-
-
+      if (username === 'test' && password === 'test') {
+        window.location.href = 'backstage_news.html';
+      } else {
+        alert('帳號或密碼錯誤');
+      }
+    });
+  </script>
 </body>
 
 </html>
