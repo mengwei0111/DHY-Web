@@ -26,6 +26,9 @@
       $.ajax({
           method: "GET",
           url: "http://u-shane.fun:3000/news",
+          headers: {
+            "authorization": "ian-test"
+          },
           dataType: 'json'
         })
         .done(function(msg) {
@@ -100,32 +103,44 @@
 
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
         <div class="flex flex-col items-center">
-          <img src="./img/img/icon/glass_black.svg" alt="玻璃系列" class="w-16 h-16 mb-4">
+          <a href="./products.html">
+            <img src="./img/img/icon/glass_black.svg" alt="玻璃系列" class="w-16 h-16 mb-4">
+          </a>
           <p class="text-center">玻璃系列</p>
         </div>
 
         <div class="flex flex-col items-center">
-          <img src="./img/img/icon/shower_black.svg" alt="淋浴設備" class="w-16 h-16 mb-4">
+          <a href="./products.html">
+            <img src="./img/img/icon/shower_black.svg" alt="淋浴設備" class="w-16 h-16 mb-4">
+          </a>
           <p class="text-center">淋浴設備</p>
         </div>
 
         <div class="flex flex-col items-center">
-          <img src="./img/img/icon/toilet_black.svg" alt="衛浴設備" class="w-16 h-16 mb-4">
+          <a href="./products.html">
+            <img src="./img/img/icon/toilet_black.svg" alt="衛浴設備" class="w-16 h-16 mb-4">
+          </a>
           <p class="text-center">衛浴設備</p>
         </div>
 
         <div class="flex flex-col items-center">
-          <img src="./img/img/icon/clothes-hanger_black.svg" alt="曬衣架" class="w-16 h-16 mb-4">
+          <a href="./products.html">
+            <img src="./img/img/icon/clothes-hanger_black.svg" alt="曬衣架" class="w-16 h-16 mb-4">
+          </a>
           <p class="text-center">曬衣架</p>
         </div>
 
         <div class="flex flex-col items-center">
-          <img src="./img/img/icon/floor_black.svg" alt="隔音地板" class="w-16 h-16 mb-4">
+          <a href="./products.html">
+            <img src="./img/img/icon/floor_black.svg" alt="隔音地板" class="w-16 h-16 mb-4">
+          </a>
           <p class="text-center">隔音地板</p>
         </div>
 
         <div class="flex flex-col items-center">
-          <img src="./img/img/icon/VAF_black.svg" alt="VAF" class="w-16 h-16 mb-4">
+          <a href="./products.html">
+            <img src="./img/img/icon/VAF_black.svg" alt="VAF" class="w-16 h-16 mb-4">
+          </a>
           <p class="text-center">VAF</p>
         </div>
       </div>
@@ -192,7 +207,7 @@
     <div class="relative h-full flex flex-col justify-center items-center text-center px-4">
       <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-6">DIY小學堂</h2>
 
-      <a href="#" class="bg-[#3374AE] text-white px-12 py-2 tracking-wide rounded-lg  transition duration-300">
+      <a href="./service.html" class="bg-[#3374AE] text-white px-12 py-2 tracking-wide rounded-lg  transition duration-300">
         點我進入
       </a>
     </div>

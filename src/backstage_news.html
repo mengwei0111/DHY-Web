@@ -135,7 +135,9 @@
               </svg>
             </button>
             <ul class="submenu pl-4 text-sm">
-              <li class="my-4">維修通報管理</li>
+              <a href="./backstage_service.html">
+                <li class="my-4">維修通報管理</li>
+              </a>
             </ul>
           </li>
         </ul>
@@ -169,7 +171,7 @@
     <div id="addNewsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden" x-show="open">
       <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div class="mt-3 text-center">
-          <h2 class="text-lg leading-6 font-medium text-gray-900">新增消息</h2>
+          <h2 id="model-title" class="text-lg leading-6 font-medium text-gray-900">新增消息</h2>
           <div class="mt-2 px-7 py-3">
             <form id="addNewsForm" class="space-y-4">
               <div>
@@ -182,8 +184,7 @@
               </div>
               <div>
                 <label for="newsImage" class="block text-sm font-medium text-gray-700">上傳圖片</label>
-                <input type="file" id="newsImage" name="newsImage" accept="image/jpeg,image/png,image/gif,image/svg+xml" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                <p class="mt-1 text-sm text-gray-500">檔案限制: 副檔名(jpg, png, jpeg, gif, svg), 檔案大小最大 20MB</p>
+                <textarea id="newsImage" name="newsImage" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
               </div>
               <div class="flex justify-end space-x-3">
                 <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition duration-300" id="cancelBtn">清除</button>
@@ -195,130 +196,35 @@
       </div>
     </div>
 
+    <div id="addNewsModal2" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden" x-show="open">
+      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+          <h2 id="model-title" class="text-lg leading-6 font-medium text-gray-900">編輯消息</h2>
+          <div class="mt-2 px-7 py-3">
+            <form id="addNewsForm2" class="space-y-4">
+              <div>
+                <label for="newsTitle" class=" block text-sm font-medium text-gray-700">消息名稱 *</label>
+                <input type="text" id="newsTitle2" name="newsTitle" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              </div>
+              <div>
+                <label for="newsDescription2" class="block text-sm font-medium text-gray-700">描述文字</label>
+                <textarea id="newsDescription2" name="newsDescription" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+              </div>
+              <div>
+                <label for="newsImage2" class="block text-sm font-medium text-gray-700">上傳圖片</label>
+                <textarea id="newsImage2" name="newsImage" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+              </div>
+              <div class="flex justify-end space-x-3">
+                <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition duration-300" id="cancelBtn2">清除</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">送出</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
-    <script>
-      var table;
-      var settings = {
-        "url": "http://u-shane.fun:3000/news",
-        "method": "GET",
-        "timeout": 0,
-        "headers": {
-          "authorization": "ian-test"
-        },
-      };
-      $.ajax(settings).done(function(response) {
-        table = $('#myTable').DataTable({
-          data: response,
-          columns: [{
-              data: null,
-              render: function(data, type, row) {
-                return '<button class="edit-btn" data-id="' + data._id + '">編輯</button> <button class="delete-btn" data-id="' + data._id + '">刪除</button>';
-              }
-            },
-            {
-              data: 'title'
-            }, {
-              data: 'description'
-            },
-            {
-              data: "imgUrl",
-              "render": function(data) {
-                //   console.log(data);
-                return '<img src="' + data + '" width="40px" alt="圖片">';
-              }
-            },
-            {
-              data: 'createdDate',
-              render: function(data, type, row) {
-                if (type === 'display' && data) {
-                  return new Date(data).toLocaleString('zh-TW');
-                }
-                return data;
-              }
-            },
-            // {
-            //   data: '_id'
-            // },
-
-          ],
-          language: {
-            "info": "本頁顯示 _START_ 到 _END_ 總共 _TOTAL_ 筆",
-            "search": "搜尋:",
-            "lengthMenu": "顯示 _MENU_ 筆資料",
-
-          }
-        });
-
-
-
-      });
-
-      // 狀態更新按鈕的事件處理程序
-      $('#myTable').on('click', '.edit-btn', function() {
-        var id = $(this).data('id');
-        var row = $(this).closest('tr');
-
-        if (confirm('確定要將此筆記錄標記為已完工嗎？')) {
-          var updateSettings = {
-            "url": "http://u-shane.fun:3000/news/" + id,
-            "method": "PATCH",
-            "timeout": 0,
-            "headers": {
-              "authorization": "ian-test",
-              "Content-Type": "application/json"
-            },
-            "data": JSON.stringify({
-              status: true
-            })
-          };
-
-          $.ajax(updateSettings)
-            .done(function(response) {
-              console.log('更新成功:', response);
-              // 更新表格中的狀態顯示
-              var cell = table.cell(row, 4);
-              cell.data(true).draw();
-              // 移除狀態更新按鈕
-              $(row).find('.status-btn').remove();
-              alert('狀態已更新為已完工');
-            })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-              alert('更新失敗，請稍後再試');
-            });
-        }
-      });
-
-
-
-
-      $('#myTable').on('click', '.delete-btn', function() {
-        var id = $(this).data('id');
-        var row = $(this).closest('tr');
-
-        if (confirm('您確定要刪除此筆記錄嗎？')) {
-          var settings = {
-            "url": "http://u-shane.fun:3000/news/" + id, // 使用動態 ID
-            "method": "DELETE",
-            "timeout": 0,
-            "headers": {
-              "authorization": "ian-test" // 請確保這是正確的授權令牌
-            },
-          };
-
-          $.ajax(settings)
-            .done(function(response) {
-              //console.log('刪除成功:', response);
-              table.row(row).remove().draw(); // 從表格中移除該行
-              alert('記錄已成功刪除');
-            })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-              //console.error('刪除失敗:', textStatus, errorThrown);
-              alert('刪除失敗，請稍後再試');
-            });
-        }
-      });
-    </script>
 
 </body>
 
@@ -330,71 +236,249 @@
     icon.classList.toggle('rotate-180');
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('addNewsModal');
-    const addBtn = document.getElementById('addNewsBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const form = document.getElementById('addNewsForm');
+  $(document).ready(function() {
+    const $modal = $('#addNewsModal');
+    const $addBtn = $('#addNewsBtn');
+    const $cancelBtn = $('#cancelBtn');
+    const $form = $('#addNewsForm');
+    const $modal2 = $('#addNewsModal2'); //新增最新消息視窗
+    const $cancelBtn2 = $('#cancelBtn2'); // 取消按鈕
+    const $form2 = $('#addNewsForm2'); //新增消息表單
 
-    // 打開模態框
-    addBtn.addEventListener('click', function() {
-      modal.classList.remove('hidden');
+    //載入全部資料
+    var table;
+    var settings = {
+      "url": "http://u-shane.fun:3000/news",
+      "method": "GET",
+      "timeout": 0,
+      "headers": {
+        "authorization": "ian-test"
+      },
+    };
+    $.ajax(settings).done(function(response) {
+      table = $('#myTable').DataTable({
+        autoWidth: false,
+        data: response,
+        columns: [{
+            data: null,
+            render: function(data, type, row) {
+              return '<button class="edit-btn" data-id="' + data._id + '">編輯</button> <button class="delete-btn" data-id="' + data._id + '">刪除</button>';
+            }
+          },
+          {
+            data: 'title'
+          }, {
+            data: 'description'
+          },
+          {
+            data: "imgUrl",
+            "render": function(data) {
+              //   console.log(data);
+              return '<img src="' + data + '" width="100px" alt="圖片">';
+            }
+          },
+          {
+            data: 'createdDate',
+            render: function(data, type, row) {
+              if (type === 'display' && data) {
+                return new Date(data).toLocaleString('zh-TW');
+              }
+              return data;
+            }
+          },
+          // {
+          //   data: '_id'
+          // },
+
+        ],
+        language: {
+          "info": "本頁顯示 _START_ 到 _END_ 總共 _TOTAL_ 筆",
+          "search": "搜尋:",
+          "lengthMenu": "顯示 _MENU_ 筆資料",
+        }
+      });
     });
 
-    // 關閉模態框
+    // 編輯資料
+    $('#myTable').on('click', '.edit-btn', function() {
+      var id = $(this).data('id');
+      var settings = {
+        "url": "http://u-shane.fun:3000/news/" + id,
+        "method": "GET",
+        "timeout": 0,
+        "headers": {
+          "authorization": "ian-test"
+        },
+
+      };
+      $modal2.removeClass('hidden');
+
+      $.ajax(settings).done(function(response) {
+        var title = response.title;
+        var description = response.description;
+        var imgUrl = response.imgUrl;
+
+        alert(title);
+        alert(description);
+        alert(imgUrl);
+      });
+    });
+
+    //刪除資料
+    $('#myTable').on('click', '.delete-btn', function() {
+      var id = $(this).data('id');
+      var row = $(this).closest('tr');
+
+      if (confirm('您確定要刪除此筆記錄嗎？')) {
+        var settings = {
+          "url": "http://u-shane.fun:3000/news/" + id, // 使用動態 ID
+          "method": "DELETE",
+          "timeout": 0,
+          "headers": {
+            "authorization": "ian-test" // 請確保這是正確的授權令牌
+          },
+        };
+
+        $.ajax(settings)
+          .done(function(response) {
+            //console.log('刪除成功:', response);
+            table.row(row).remove().draw(); // 從表格中移除該行
+            alert('記錄已成功刪除');
+          })
+          .fail(function(jqXHR, textStatus, errorThrown) {
+            //console.error('刪除失敗:', textStatus, errorThrown);
+            alert('刪除失敗，請稍後再試');
+          });
+      }
+    });
+
+
+    /**
+     * 新增更新視窗控制區
+     * 
+     * **/
+
+    /** 表格一: 最新消息視窗(新增)
+     * 
+     * */
+    // 打開最新消息視窗(新增)
+    $addBtn.on('click', function() {
+      $modal.removeClass('hidden');
+    });
+
+    // 關閉最新消息視窗(新增)
     function closeModal() {
-      modal.classList.add('hidden');
+      $modal.addClass('hidden');
     }
 
-    // 點擊模態框外部關閉
-    modal.addEventListener('click', function(e) {
-      if (e.target === modal) {
+    // 點擊外部區塊關閉視窗
+    $modal.on('click', function(e) {
+      if (e.target === this) {
         closeModal();
       }
     });
 
-    // 取消按鈕
-    cancelBtn.addEventListener('click', function() {
-      form.reset();
+    // 按下取消按鈕
+    $cancelBtn.on('click', function() {
+      $form[0].reset();
       closeModal();
     });
 
-// 表單提交
-$(form).submit(function(e) {
-        e.preventDefault();
-        console.log('表單提交被觸發');
+    //按下送出表單
+    $form.on('submit', function(e) {
+      e.preventDefault();
+      console.log('表單提交被觸發');
 
-        var formData = {
-            title: $('input[name="newsTitle"]').val(),
-            description: $('textarea[name="newsDescription"]').val(),
-            // 注意：這裡需要處理圖片上傳，可能需要額外的邏輯
-        };
+      var formData = {
+        title: $('input[name="newsTitle"]').val(),
+        description: $('textarea[name="newsDescription"]').val(),
+        imgUrl: $('textarea[name="newsImage"]').val(),
+      };
 
-        console.log('處理後的數據:', formData);
+      console.log('處理後的數據:', formData);
 
-        $.ajax({
-            url: 'http://u-shane.fun:3000/news', // 假設這是新聞添加的API端點
-            type: 'POST',
-            contentType: 'application/json',
-            headers: {
-                "authorization": "ian-test"
-            },
-            data: JSON.stringify(formData),
-            success: function(response) {
-                console.log('成功：', response);
-                alert('新聞已成功添加！');
-                form.reset();
-                closeModal();
-            },
-            error: function(xhr, status, error) {
-                console.error('錯誤：', status, error);
-                alert('添加失敗，請稍後再試。錯誤信息：' + error);
-            }
-        });
+      /**
+       * 新增最新消息開始
+       */
+      $.ajax({
+        url: 'http://u-shane.fun:3000/news', // 假設這是新聞添加的API端點
+        type: 'POST',
+        contentType: 'application/json',
+        headers: {
+          "authorization": "ian-test"
+        },
+        data: JSON.stringify(formData),
+        success: function(response) {
+          console.log('成功：', response);
+          alert('最新消息已成功添加！');
+          $form[0].reset();
+          closeModal();
+        },
+        error: function(xhr, status, error) {
+          console.error('錯誤：', status, error);
+          alert('添加失敗，請稍後再試。錯誤：' + error);
+        }
+      });
+      /**
+       * 新增最新消息結束
+       */
     });
-});
 
+    /** 表格二: 最新消息視窗(編輯)
+     * 
+     * */
+    // 關閉最新消息視窗
+    function closeModal2() {
+      $modal2.addClass('hidden');
+    }
+
+    // 點擊外部區塊關閉視窗
+    $modal2.on('click', function(e) {
+      if (e.target === this) {
+        closeModal2();
+      }
+    });
+
+    // 取消按鈕
+    $cancelBtn2.on('click', function() {
+      $form2[0].reset();
+      closeModal2();
+    });
+
+    // 表單提交
+    $form2.on('submit', function(e) {
+      e.preventDefault();
+      console.log('表單提交被觸發');
+
+      var formData = {
+        title: $('input[name="newsTitle"]').val(),
+        description: $('textarea[name="newsDescription"]').val(),
+        imgUrl: $('textarea[name="newsImage"]').val(),
+      };
+
+      console.log('處理後的數據:', formData);
+
+      $.ajax({
+        url: 'http://u-shane.fun:3000/news', // 假設這是新聞添加的API端點
+        type: 'POST',
+        contentType: 'application/json',
+        headers: {
+          "authorization": "ian-test"
+        },
+        data: JSON.stringify(formData),
+        success: function(response) {
+          console.log('成功：', response);
+          alert('最新消息已成功添加！');
+          $form[0].reset();
+          closeModal2();
+        },
+        error: function(xhr, status, error) {
+          console.error('錯誤：', status, error);
+          alert('添加失敗，請稍後再試。錯誤：' + error);
+        }
+      });
+    });
+  });
 </script>
-
 
 </html>

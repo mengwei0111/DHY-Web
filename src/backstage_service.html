@@ -68,7 +68,9 @@
       <nav>
         <ul>
           <button>
+            <a href="./backstage_news.html">
             <li class="mb-4 ">最新消息</li>
+          </a>
           </button>
           <li class="mb-4">
             <button class="flex items-center justify-between w-full text-left" onclick="toggleSubmenu(this)">
@@ -108,7 +110,19 @@
     </div>
     <!-- 客服通報 -->
     <div class="container mx-auto px-4 py-8">
-      <h1 class="text-2xl font-bold mb-6">客服管理 > 維修通報查詢</h1>
+
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">客服管理 > 維修通報查詢</h1>
+        <div class="flex space-x-2">
+          <!-- 新增按鈕 -->
+          <button id="addNewsBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">新增</button>
+          <a href="./index.html">
+            <button class="px-4 py-2 bg-blue-900 text-white rounded">登出</button>
+          </a>
+        </div>
+      </div>
+
+
 
 
       <table id="myTable" class="display">
@@ -256,6 +270,11 @@
               });
           }
         });
+
+
+
+
+        
       </script>
 
 </body>
