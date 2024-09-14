@@ -94,7 +94,7 @@
 </style>
 
 
-<body class="bg-gray-100">
+<body>
   <div class="flex ">
     <div class="w-64 bg-blue-900 text-white p-4 sidebar">
       <div class="mb-8">
@@ -135,9 +135,7 @@
               </svg>
             </button>
             <ul class="submenu pl-4 text-sm">
-              <a href="./backstage_service.html">
-                <li class="my-4">維修通報管理</li>
-              </a>
+              <li class="my-4">維修通報管理</li>
             </ul>
           </li>
         </ul>
@@ -318,9 +316,12 @@
         var description = response.description;
         var imgUrl = response.imgUrl;
 
-        alert(title);
-        alert(description);
-        alert(imgUrl);
+        $('#newsTitle2').val(response.title);
+        $('#newsDescription2').val(response.description);
+        $('#newsImage2').val(response.imgUrl);
+        $('#addNewsForm2').data('editId', id);
+        console.log('ID 已存到表單:', id);
+
       });
     });
 
@@ -449,18 +450,18 @@
     $form2.on('submit', function(e) {
       e.preventDefault();
       console.log('表單提交被觸發');
-
+      var id = $(this).data('editId');
       var formData = {
-        title: $('input[name="newsTitle"]').val(),
-        description: $('textarea[name="newsDescription"]').val(),
-        imgUrl: $('textarea[name="newsImage"]').val(),
+        title: $('#newsTitle2').val(),
+        description: $('#newsDescription2').val(),
+        imgUrl: $('#newsImage2').val(),
       };
-
+      console.log('當前編輯ID:', id);
       console.log('處理後的數據:', formData);
 
       $.ajax({
-        url: 'http://u-shane.fun:3000/news', // 假設這是新聞添加的API端點
-        type: 'POST',
+        url: 'http://u-shane.fun:3000/news/' + id, // 假設這是新聞添加的API端點
+        type: 'PATCH',
         contentType: 'application/json',
         headers: {
           "authorization": "ian-test"
@@ -468,16 +469,20 @@
         data: JSON.stringify(formData),
         success: function(response) {
           console.log('成功：', response);
-          alert('最新消息已成功添加！');
-          $form[0].reset();
+          alert('最新消息已編輯完成！');
+          var row = table.row($('.edit-btn[data-id="' + id + '"]').closest('tr'));
+          row.data(response).draw();
+          $form2[0].reset();
           closeModal2();
         },
         error: function(xhr, status, error) {
           console.error('錯誤：', status, error);
-          alert('添加失敗，請稍後再試。錯誤：' + error);
+          alert('編輯失敗，請稍後再試。錯誤：' + error);
         }
       });
     });
+
+    //日期選擇器
   });
 </script>
 

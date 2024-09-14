@@ -11,6 +11,7 @@
 
 <body>
   <%- include("include/header")%>
+  
   <div class="min-h-screen w-full bg-cover bg-center flex items-center justify-center" style="background-image: url('./img/img/picture/index/bathpic.png');">
     <div class="w-full max-w-2xl mx-auto">
       <form id="loginForm" class="px-8 pt-6 pb-8 mb-4">
@@ -23,7 +24,7 @@
               帳號
             </label>
             <div class="w-2/3">
-              <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-40" id="username" type="text">
+              <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-40 " id="username" type="text" required>
             </div>
           </div>
         </div>
@@ -33,7 +34,7 @@
               密碼
             </label>
             <div class="w-2/3">
-              <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-40" id="password" type="password">
+              <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-40" id="password" type="password" required>
             </div>
           </div>
         </div>
