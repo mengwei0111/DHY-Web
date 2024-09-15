@@ -9,8 +9,10 @@
     "deploy": "rimraf dist && vite build && firebase deploy --only hosting"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.5.9",
     "axios": "^1.6.5",
     "dotenv": "^16.3.2",
+    "flowbite": "^2.5.1",
     "glob": "^10.3.10",
     "rimraf": "^5.0.7",
     "sass": "^1.69.6",

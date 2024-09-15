@@ -28,7 +28,6 @@
 
   .sidebar {
     width: 256px;
-    height: 100vh;
     /* w-64 等價於 16rem 或 256px */
     background-color: #1e3a8a;
     /* bg-blue-900 */
@@ -95,7 +94,7 @@
 
 
 <body>
-  <div class="flex ">
+  <div class="flex layout-container ">
     <div class="w-64 bg-blue-900 text-white p-4 sidebar">
       <div class="mb-8">
         <div class="w-12 h-12 ">
@@ -135,7 +134,9 @@
               </svg>
             </button>
             <ul class="submenu pl-4 text-sm">
+              <a href="./backstage_service.html">
               <li class="my-4">維修通報管理</li>
+            </a>
             </ul>
           </li>
         </ul>
@@ -483,6 +484,10 @@
     });
 
     //日期選擇器
+    
+
+
+
   });
 </script>
 
