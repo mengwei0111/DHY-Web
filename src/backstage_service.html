@@ -55,7 +55,7 @@
 </style>
 
 
-<body >
+<body>
   <div class="flex layout-container ">
     <div class="w-64 bg-blue-900 text-white p-4 sidebar">
       <div class="mb-8">
@@ -68,8 +68,8 @@
         <ul>
           <button>
             <a href="./backstage_news.html">
-            <li class="mb-4 ">最新消息</li>
-          </a>
+              <li class="mb-4 ">最新消息</li>
+            </a>
           </button>
           <li class="mb-4">
             <button class="flex items-center justify-between w-full text-left" onclick="toggleSubmenu(this)">
@@ -135,70 +135,70 @@
       </table>
 
       <script>
-        $(document).ready( function() {
-        var table;
-        var settings = {
-          "url": "http://u-shane.fun:3000/service",
-          "method": "GET",
-          "timeout": 0,
-          "headers": {
-            "authorization": "ian-test"
-          },
-        };
-        $.ajax(settings).done(function(response) {
-          table = $('#myTable').DataTable({
-            data: response,
-            columns: [{
-                data: 'name'
-              }, {
-                data: 'phone'
-              }, {
-                data: 'matter'
-              }, {
-                data: 'reason'
-              }, {
-                data: 'status',
-                render: function(data, type, row) {
-                  if (type === 'display') {
-                    if (data === true) {
-                      return '<span style="color: green;">已完工</span>';
-                    } else {
-                      return '<span style="color: red;">未完成</span>';
+        $(document).ready(function() {
+          var table;
+          var settings = {
+            "url": "https://u-shane.fun:3000/service",
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+              "authorization": "ian-test"
+            },
+          };
+          $.ajax(settings).done(function(response) {
+            table = $('#myTable').DataTable({
+              data: response,
+              columns: [{
+                  data: 'name'
+                }, {
+                  data: 'phone'
+                }, {
+                  data: 'matter'
+                }, {
+                  data: 'reason'
+                }, {
+                  data: 'status',
+                  render: function(data, type, row) {
+                    if (type === 'display') {
+                      if (data === true) {
+                        return '<span style="color: green;">已完工</span>';
+                      } else {
+                        return '<span style="color: red;">未完成</span>';
+                      }
                     }
+                    return data;
                   }
-                  return data;
-                }
-              },
-              {
-                data: 'createdDate',
-                render: function(data, type, row) {
-                  if (type === 'display' && data) {
-                    return new Date(data).toLocaleString('zh-TW');
+                },
+                {
+                  data: 'createdDate',
+                  render: function(data, type, row) {
+                    if (type === 'display' && data) {
+                      return new Date(data).toLocaleString('zh-TW');
+                    }
+                    return data;
                   }
-                  return data;
+                },
+                // {
+                //   data: '_id'
+                // },
+                {
+                  data: null,
+                  render: function(data, type, row) {
+                    return '<button class="edit-btn" data-id="' + data._id + '">狀態更新</button> <button class="delete-btn" data-id="' + data._id + '">刪除</button>';
+                  }
                 }
-              },
-              // {
-              //   data: '_id'
-              // },
-              {
-                data: null,
-                render: function(data, type, row) {
-                  return '<button class="edit-btn" data-id="' + data._id + '">狀態更新</button> <button class="delete-btn" data-id="' + data._id + '">刪除</button>';
-                }
+              ],
+              language: {
+                "info": "本頁顯示 _START_ 到 _END_ 總共 _TOTAL_ 筆",
+                "search": "搜尋:",
+                "lengthMenu": "顯示 _MENU_ 筆資料",
+
               }
-            ],
-            language: {
-              "info":           "本頁顯示 _START_ 到 _END_ 總共 _TOTAL_ 筆",
-              "search": "搜尋:",
-              "lengthMenu":     "顯示 _MENU_ 筆資料",
-              
-            }
+            });
+
           });
 
         });
-
-      });
 
         // 狀態更新按鈕的事件處理程序
         $('#myTable').on('click', '.edit-btn', function() {
@@ -207,7 +207,7 @@
 
           if (confirm('確定要將此筆記錄標記為已完工嗎？')) {
             var updateSettings = {
-              "url": "http://u-shane.fun:3000/service/" + id,
+              "url": "https://u-shane.fun:3000/service/" + id,
               "method": "PATCH",
               "timeout": 0,
               "headers": {
@@ -244,7 +244,7 @@
 
           if (confirm('您確定要刪除此筆記錄嗎？')) {
             var settings = {
-              "url": "http://u-shane.fun:3000/service/" + id, // 使用動態 ID
+              "url": "https://u-shane.fun:3000/service/" + id, // 使用動態 ID
               "method": "DELETE",
               "timeout": 0,
               "headers": {
@@ -264,11 +264,6 @@
               });
           }
         });
-
-
-
-
-        
       </script>
 
 </body>
@@ -280,7 +275,6 @@
     const icon = button.querySelector('svg');
     icon.classList.toggle('rotate-180');
   }
-
 </script>
 
 </html>

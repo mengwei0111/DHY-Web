@@ -13,66 +13,66 @@
 
   <script>
     $(document).ready(function() {
-       $('#clearBtn').click(function() {
-           $('#maintenanceForm')[0].reset();
-       });
+      $('#clearBtn').click(function() {
+        $('#maintenanceForm')[0].reset();
+      });
 
-       $('#maintenanceForm').submit(function(e) {
-           e.preventDefault();
-           console.log('表單提交被觸發');
+      $('#maintenanceForm').submit(function(e) {
+        e.preventDefault();
+        console.log('表單提交被觸發');
 
-           var formData = {
-               name: $('input[name="reporter"]').val(),
-               phone: $('input[name="phone"]').val(),
-               matter: $('input[name="item"]').val(),
-               reason: $('textarea[name="reason"]').val()
-               
-           };
+        var formData = {
+          name: $('input[name="reporter"]').val(),
+          phone: $('input[name="phone"]').val(),
+          matter: $('input[name="item"]').val(),
+          reason: $('textarea[name="reason"]').val()
 
-           console.log('處理後的數據:', formData);
+        };
 
-           $.ajax({
-               url: 'http://u-shane.fun:3000/service',
-               type: 'POST',
-               contentType: 'application/json',
-               headers: {
-                "authorization": "ian-test"
-            },
-              
-               data: JSON.stringify(formData),
-               success: function(response) {
-                   console.log('成功：', response);
-                   alert('維修通報已成功送出！');
-                   $('#maintenanceForm')[0].reset();
-               },
-               error: function(xhr, status, error) {
-                   console.error('錯誤：', status, error);
-                   alert('送出失敗，請稍後再試。錯誤信息：' + error);
-               }
-           });
-       });
-   });
+        console.log('處理後的數據:', formData);
 
-//   var settings = {
-//   "url": "http://u-shane.fun:3000/service",
-//   "method": "POST",
-//   "timeout": 0,
-//   "headers": {
-//     "Content-Type": "application/json",
-//     "authorization": "ian-test"
-//   },
-//   "data": JSON.stringify({
-//     "name": "ian123",
-//     "phone": "0911223344",
-//     "matter": "門口地板磚塊裂開",
-//     "reason": "有一天我在門口直接堆木炭烤肉，烤一烤就爆炸了..."
-//   }),
-// };
+        $.ajax({
+          url: 'https://u-shane.fun:3000/service',
+          type: 'POST',
+          contentType: 'application/json',
+          headers: {
+            "authorization": "ian-test"
+          },
 
-// $.ajax(settings).done(function (response) {
-//   console.log(response);
-// });
- </script>
+          data: JSON.stringify(formData),
+          success: function(response) {
+            console.log('成功：', response);
+            alert('維修通報已成功送出！');
+            $('#maintenanceForm')[0].reset();
+          },
+          error: function(xhr, status, error) {
+            console.error('錯誤：', status, error);
+            alert('送出失敗，請稍後再試。錯誤信息：' + error);
+          }
+        });
+      });
+    });
+
+    //   var settings = {
+    //   "url": "https://u-shane.fun:3000/service",
+    //   "method": "POST",
+    //   "timeout": 0,
+    //   "headers": {
+    //     "Content-Type": "application/json",
+    //     "authorization": "ian-test"
+    //   },
+    //   "data": JSON.stringify({
+    //     "name": "ian123",
+    //     "phone": "0911223344",
+    //     "matter": "門口地板磚塊裂開",
+    //     "reason": "有一天我在門口直接堆木炭烤肉，烤一烤就爆炸了..."
+    //   }),
+    // };
+
+    // $.ajax(settings).done(function (response) {
+    //   console.log(response);
+    // });
+  </script>
 
 </head>
 
@@ -113,7 +113,7 @@
         <input type="text" id="reporter" name="reporter" class="flex-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
       </div>
 
-     
+
 
       <div class="flex flex-col sm:flex-row sm:items-center">
         <label for="repair-item" class="w-1/4 block text-sm font-medium text-gray-700 sm:mb-0 mb-1">聯絡電話</label>
@@ -138,12 +138,12 @@
     </form>
   </div>
 
-  
 
-  
+
+
 
   <%- include("include/footer")%>
-  
+
 
 </body>
 

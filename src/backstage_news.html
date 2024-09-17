@@ -7,9 +7,12 @@
   <title>後台</title>
   <link rel="stylesheet" href="scss/main.scss">
   <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.css" />
-
+  <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.5.3/css/dataTables.dateTime.min.css" />
+  
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+  <script src="https://cdn.datatables.net/datetime/1.5.3/js/dataTables.dateTime.min.js"></script>
 
 </head>
 
@@ -135,8 +138,8 @@
             </button>
             <ul class="submenu pl-4 text-sm">
               <a href="./backstage_service.html">
-              <li class="my-4">維修通報管理</li>
-            </a>
+                <li class="my-4">維修通報管理</li>
+              </a>
             </ul>
           </li>
         </ul>
@@ -145,6 +148,19 @@
     <div class="flex-1 p-8 overflow-auto">
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">最新消息</h1>
+        <table border="0" cellspacing="5" cellpadding="5">
+          <tbody>
+            <tr>
+              <td>Minimum date:</td>
+              <td><input type="text" id="min" name="min"></td>
+            </tr>
+            <tr>
+              <td>Maximum date:</td>
+              <td><input type="text" id="max" name="max"></td>
+            </tr>
+          </tbody>
+        </table>
+
         <div class="flex space-x-2">
           <!-- 新增按鈕 -->
           <button id="addNewsBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">新增</button>
@@ -247,7 +263,7 @@
     //載入全部資料
     var table;
     var settings = {
-      "url": "http://u-shane.fun:3000/news",
+      "url": "https://u-shane.fun:3000/news",
       "method": "GET",
       "timeout": 0,
       "headers": {
@@ -302,7 +318,7 @@
     $('#myTable').on('click', '.edit-btn', function() {
       var id = $(this).data('id');
       var settings = {
-        "url": "http://u-shane.fun:3000/news/" + id,
+        "url": "https://u-shane.fun:3000/news/" + id,
         "method": "GET",
         "timeout": 0,
         "headers": {
@@ -333,7 +349,7 @@
 
       if (confirm('您確定要刪除此筆記錄嗎？')) {
         var settings = {
-          "url": "http://u-shane.fun:3000/news/" + id, // 使用動態 ID
+          "url": "https://u-shane.fun:3000/news/" + id, // 使用動態 ID
           "method": "DELETE",
           "timeout": 0,
           "headers": {
@@ -403,7 +419,7 @@
        * 新增最新消息開始
        */
       $.ajax({
-        url: 'http://u-shane.fun:3000/news', // 假設這是新聞添加的API端點
+        url: 'https://u-shane.fun:3000/news', // 假設這是新聞添加的API端點
         type: 'POST',
         contentType: 'application/json',
         headers: {
@@ -461,7 +477,7 @@
       console.log('處理後的數據:', formData);
 
       $.ajax({
-        url: 'http://u-shane.fun:3000/news/' + id, // 假設這是新聞添加的API端點
+        url: 'https://u-shane.fun:3000/news/' + id, // 假設這是新聞添加的API端點
         type: 'PATCH',
         contentType: 'application/json',
         headers: {
@@ -483,11 +499,38 @@
       });
     });
 
-    //日期選擇器
-    
+    //日期選擇
+    let minDate, maxDate;
 
+    // Custom filtering function which will search data in column four between two values
+    DataTable.ext.search.push(function(settings, data, dataIndex) {
+      let min = minDate.val();
+      let max = maxDate.val();
+      let date = new Date(data[4]);
 
+      if (
+        (min === null && max === null) ||
+        (min === null && date <= max) ||
+        (min <= date && max === null) ||
+        (min <= date && date <= max)
+      ) {
+        return true;
+      }
+      return false;
+    });
 
+    // Create date inputs
+    minDate = new DateTime('#min', {
+      format: 'YYYY-MM-DD'
+    });
+    maxDate = new DateTime('#max', {
+      format: 'YYYY-MM-DD'
+    });
+
+    // Refilter the table
+    document.querySelectorAll('#min, #max').forEach((el) => {
+      el.addEventListener('change', () => table.draw());
+    });
   });
 </script>
 
