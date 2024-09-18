@@ -7,9 +7,14 @@
   <title>後台</title>
   <link rel="stylesheet" href="scss/main.scss">
   <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.5.3/css/dataTables.dateTime.min.css" />
+
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+  <script src="https://cdn.datatables.net/datetime/1.5.3/js/dataTables.dateTime.min.js"></script>
+
 
 </head>
 
@@ -108,17 +113,32 @@
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">客服管理 > 維修通報查詢</h1>
         <div class="flex space-x-2">
-          <!-- 新增按鈕 -->
-          <button id="addNewsBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">新增</button>
           <a href="./index.html">
             <button class="px-4 py-2 bg-blue-900 text-white rounded">登出</button>
           </a>
         </div>
       </div>
+      <!-- 日期選擇器 -->
+      <table class="border-collapse flex justify-end">
+        <tbody>
+          <tr class="align-middle">
+            <td class="pr-2">
+              <label for="min" class="text-gray-700">最小日期:</label>
+            </td>
+            <td class="pr-4">
+              <input  id="min" name="min" class="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </td>
+            <td class="pr-2">
+              <label for="max" class="text-gray-700">最大日期:</label>
+            </td>
+            <td>
+              <input  id="max" name="max" class="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-
-
-
+      <!-- datatable表格 -->
       <table id="myTable" class="display">
         <thead>
           <tr>
@@ -133,148 +153,176 @@
           </tr>
         </thead>
       </table>
-
-      <script>
-        $(document).ready(function() {
-          var table;
-          var settings = {
-            "url": "https://u-shane.fun:3000/service",
-            "method": "GET",
-            "timeout": 0,
-            "headers": {
-              "authorization": "ian-test"
-            },
-          };
-          $.ajax(settings).done(function(response) {
-            table = $('#myTable').DataTable({
-              data: response,
-              columns: [{
-                  data: 'name'
-                }, {
-                  data: 'phone'
-                }, {
-                  data: 'matter'
-                }, {
-                  data: 'reason'
-                }, {
-                  data: 'status',
-                  render: function(data, type, row) {
-                    if (type === 'display') {
-                      if (data === true) {
-                        return '<span style="color: green;">已完工</span>';
-                      } else {
-                        return '<span style="color: red;">未完成</span>';
-                      }
-                    }
-                    return data;
-                  }
-                },
-                {
-                  data: 'createdDate',
-                  render: function(data, type, row) {
-                    if (type === 'display' && data) {
-                      return new Date(data).toLocaleString('zh-TW');
-                    }
-                    return data;
-                  }
-                },
-                // {
-                //   data: '_id'
-                // },
-                {
-                  data: null,
-                  render: function(data, type, row) {
-                    return '<button class="edit-btn" data-id="' + data._id + '">狀態更新</button> <button class="delete-btn" data-id="' + data._id + '">刪除</button>';
-                  }
-                }
-              ],
-              language: {
-                "info": "本頁顯示 _START_ 到 _END_ 總共 _TOTAL_ 筆",
-                "search": "搜尋:",
-                "lengthMenu": "顯示 _MENU_ 筆資料",
-
-              }
-            });
-
-          });
-
-        });
-
-        // 狀態更新按鈕的事件處理程序
-        $('#myTable').on('click', '.edit-btn', function() {
-          var id = $(this).data('id');
-          var row = $(this).closest('tr');
-
-          if (confirm('確定要將此筆記錄標記為已完工嗎？')) {
-            var updateSettings = {
-              "url": "https://u-shane.fun:3000/service/" + id,
-              "method": "PATCH",
-              "timeout": 0,
-              "headers": {
-                "authorization": "ian-test",
-                "Content-Type": "application/json"
-              },
-              "data": JSON.stringify({
-                status: true
-              })
-            };
-
-            $.ajax(updateSettings)
-              .done(function(response) {
-                console.log('更新成功:', response);
-                // 更新表格中的狀態顯示
-                var cell = table.cell(row, 4);
-                cell.data(true).draw();
-                // 移除狀態更新按鈕
-                $(row).find('.status-btn').remove();
-                alert('狀態已更新為已完工');
-              })
-              .fail(function(jqXHR, textStatus, errorThrown) {
-                alert('更新失敗，請稍後再試');
-              });
-          }
-        });
-
-
-
-
-        $('#myTable').on('click', '.delete-btn', function() {
-          var id = $(this).data('id');
-          var row = $(this).closest('tr');
-
-          if (confirm('您確定要刪除此筆記錄嗎？')) {
-            var settings = {
-              "url": "https://u-shane.fun:3000/service/" + id, // 使用動態 ID
-              "method": "DELETE",
-              "timeout": 0,
-              "headers": {
-                "authorization": "ian-test" // 請確保這是正確的授權令牌
-              },
-            };
-
-            $.ajax(settings)
-              .done(function(response) {
-                //console.log('刪除成功:', response);
-                table.row(row).remove().draw(); // 從表格中移除該行
-                alert('記錄已成功刪除');
-              })
-              .fail(function(jqXHR, textStatus, errorThrown) {
-                //console.error('刪除失敗:', textStatus, errorThrown);
-                alert('刪除失敗，請稍後再試');
-              });
-          }
-        });
-      </script>
-
 </body>
 
 <script>
+  // 左側菜單
   function toggleSubmenu(button) {
     const submenu = button.nextElementSibling;
     submenu.classList.toggle('active');
     const icon = button.querySelector('svg');
     icon.classList.toggle('rotate-180');
-  }
+  };
+  // 載入全部資料
+  $(document).ready(function() {
+    var table;
+    var settings = {
+      "url": "https://u-shane.fun:3000/service",
+      "method": "GET",
+      "timeout": 0,
+      "headers": {
+        "authorization": "ian-test"
+      },
+    };
+    $.ajax(settings).done(function(response) {
+      table = $('#myTable').DataTable({
+        data: response,
+        columns: [{
+            data: 'name'
+          }, {
+            data: 'phone'
+          }, {
+            data: 'matter'
+          }, {
+            data: 'reason'
+          }, {
+            data: 'status',
+            render: function(data, type, row) {
+              if (type === 'display') {
+                if (data === true) {
+                  return '<span style="color: green;">已完工</span>';
+                } else {
+                  return '<span style="color: red;">未完成</span>';
+                }
+              }
+              return data;
+            }
+          },
+          {
+            data: 'createdDate',
+            render: function(data, type, row) {
+              if (type === 'display' && data) {
+                return new Date(data).toLocaleString('zh-TW');
+              }
+              return data;
+            }
+          },
+          // {
+          //   data: '_id'
+          // },
+          {
+            data: null,
+            render: function(data, type, row) {
+              return '<button class="edit-btn" data-id="' + data._id + '">狀態更新</button> <button class="delete-btn" data-id="' + data._id + '">刪除</button>';
+            }
+          }
+        ],
+        language: {
+          "info": "本頁顯示 _START_ 到 _END_ 總共 _TOTAL_ 筆",
+          "search": "搜尋:",
+          "lengthMenu": "顯示 _MENU_ 筆資料",
+
+        }
+      });
+
+    });
+
+
+    // 狀態更新按鈕的事件處理程序
+    $('#myTable').on('click', '.edit-btn', function() {
+      var id = $(this).data('id');
+      var row = $(this).closest('tr');
+
+      if (confirm('確定要將此筆記錄標記為已完工嗎？')) {
+        var updateSettings = {
+          "url": "https://u-shane.fun:3000/service/" + id,
+          "method": "PATCH",
+          "timeout": 0,
+          "headers": {
+            "authorization": "ian-test",
+            "Content-Type": "application/json"
+          },
+          "data": JSON.stringify({
+            status: true
+          })
+        };
+
+        $.ajax(updateSettings)
+          .done(function(response) {
+            console.log('更新成功:', response);
+            // 更新表格中的狀態顯示
+            var cell = table.cell(row, 4);
+            cell.data(true).draw();
+            // 移除狀態更新按鈕
+            $(row).find('.status-btn').remove();
+            alert('狀態已更新為已完工');
+          })
+          .fail(function(jqXHR, textStatus, errorThrown) {
+            alert('更新失敗，請稍後再試');
+          });
+      }
+    });
+    // 刪除按鈕事件
+    $('#myTable').on('click', '.delete-btn', function() {
+      var id = $(this).data('id');
+      var row = $(this).closest('tr');
+
+      if (confirm('您確定要刪除此筆記錄嗎？')) {
+        var settings = {
+          "url": "https://u-shane.fun:3000/service/" + id, // 使用動態 ID
+          "method": "DELETE",
+          "timeout": 0,
+          "headers": {
+            "authorization": "ian-test" // 請確保這是正確的授權令牌
+          },
+        };
+
+        $.ajax(settings)
+          .done(function(response) {
+            //console.log('刪除成功:', response);
+            table.row(row).remove().draw(); // 從表格中移除該行
+            alert('記錄已成功刪除');
+          })
+          .fail(function(jqXHR, textStatus, errorThrown) {
+            //console.error('刪除失敗:', textStatus, errorThrown);
+            alert('刪除失敗，請稍後再試');
+          });
+      }
+    });
+
+    // //日期選擇
+    let minDate, maxDate;
+
+    // Custom filtering function which will search data in column four between two values
+    DataTable.ext.search.push(function(settings, data, dataIndex) {
+      let min = minDate.val();
+      let max = maxDate.val();
+      let date = new Date(data[5]);
+
+      if (
+        (min === null && max === null) ||
+        (min === null && date <= max) ||
+        (min <= date && max === null) ||
+        (min <= date && date <= max)
+      ) {
+        return true;
+      }
+      return false;
+    });
+
+    // Create date inputs
+    minDate = new DateTime('#min', {
+      format: 'YYYY-MM-DD'
+    });
+    maxDate = new DateTime('#max', {
+      format: 'YYYY-MM-DD'
+    });
+
+    // Refilter the table
+    document.querySelectorAll('#min, #max').forEach((el) => {
+      el.addEventListener('change', () => table.draw());
+    });
+  });
 </script>
 
 </html>

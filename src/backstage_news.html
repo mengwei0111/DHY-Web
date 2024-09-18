@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="scss/main.scss">
   <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.css" />
   <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.5.3/css/dataTables.dateTime.min.css" />
-  
+
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
@@ -31,9 +31,7 @@
 
   .sidebar {
     width: 256px;
-    /* w-64 等價於 16rem 或 256px */
     background-color: #1e3a8a;
-    /* bg-blue-900 */
     color: white;
     padding: 1rem;
     flex-shrink: 0;
@@ -62,7 +60,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 200px;
-    /* 調整此值以適應你的需求 */
     background-color: #f3f4f6;
     padding: 10px;
     font-weight: bold;
@@ -72,7 +69,6 @@
   #myTable th {
     max-width: 300px;
     width: 100px;
-    /* 設置固定寬度 */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -93,10 +89,55 @@
       font-size: 14px;
     }
   }
+
+  @media screen and (max-width: 768px) {
+    .layout-container {
+      flex-direction: column;
+    }
+
+    .sidebar {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: -100%;
+      height: 100vh;
+      z-index: 1000;
+      transition: left 0.3s ease;
+    }
+
+    .sidebar.active {
+      left: 0;
+    }
+
+
+
+    @media screen and (max-width: 768px) {
+
+      .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100vh;
+        width: 250px;
+        transition: left 0.3s ease;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+    }
+  }
 </style>
 
 
 <body>
+  <button class="block md:hidden  fixed top-[30px] left-[10px] z-[1001] bg-transparent border-0 text-2xl text-black cursor-pointer menu-toggle">
+    ☰
+  </button>
   <div class="flex layout-container ">
     <div class="w-64 bg-blue-900 text-white p-4 sidebar">
       <div class="mb-8">
@@ -109,7 +150,7 @@
         <ul>
           <button>
             <a href="./backstage_news.html">
-              <li class="mb-4 ">最新消息</li>
+              <li class="mb-4">最新消息</li>
             </a>
           </button>
           <li class="mb-4">
@@ -146,21 +187,8 @@
       </nav>
     </div>
     <div class="flex-1 p-8 overflow-auto">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">最新消息</h1>
-        <table border="0" cellspacing="5" cellpadding="5">
-          <tbody>
-            <tr>
-              <td>Minimum date:</td>
-              <td><input type="text" id="min" name="min"></td>
-            </tr>
-            <tr>
-              <td>Maximum date:</td>
-              <td><input type="text" id="max" name="max"></td>
-            </tr>
-          </tbody>
-        </table>
-
+      <div class="flex justify-between mb-6 ">
+        <h1 class="text-2xl ml-4 font-bold">最新消息</h1>
         <div class="flex space-x-2">
           <!-- 新增按鈕 -->
           <button id="addNewsBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">新增</button>
@@ -169,6 +197,26 @@
           </a>
         </div>
       </div>
+
+      <table class="border-collapse flex justify-end">
+        <tbody>
+          <tr class="align-middle flex">
+            <td class="pr-2">
+              <label for="min" class="text-gray-700">日期區間:</label>
+            </td>
+            <td class="pr-4">
+              <input  id="min" name="min" class="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </td>
+            <td class="pr-2">
+              <label for="max" class="text-gray-700">到:</label>
+            </td>
+            <td>
+              <input id="max" name="max" class="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
 
       <table id="myTable" class="display w-full">
         <thead>
@@ -199,7 +247,7 @@
               </div>
               <div>
                 <label for="newsImage" class="block text-sm font-medium text-gray-700">上傳圖片</label>
-                <textarea id="newsImage" name="newsImage" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                <input type="file" id="newsImage" name="newsImage" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
               </div>
               <div class="flex justify-end space-x-3">
                 <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition duration-300" id="cancelBtn">清除</button>
@@ -407,39 +455,65 @@
       e.preventDefault();
       console.log('表單提交被觸發');
 
-      var formData = {
-        title: $('input[name="newsTitle"]').val(),
-        description: $('textarea[name="newsDescription"]').val(),
-        imgUrl: $('textarea[name="newsImage"]').val(),
-      };
+      // 圖片上傳
+      var fileInput = $('#newsImage')[0];
+      var file = fileInput.files[0];
+      var form = new FormData();
+      form.append("file", file);
 
-      console.log('處理後的數據:', formData);
 
-      /**
-       * 新增最新消息開始
-       */
-      $.ajax({
-        url: 'https://u-shane.fun:3000/news', // 假設這是新聞添加的API端點
-        type: 'POST',
-        contentType: 'application/json',
-        headers: {
+      var settings = {
+        "url": "https://u-shane.fun:3000/upload",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
           "authorization": "ian-test"
         },
-        data: JSON.stringify(formData),
-        success: function(response) {
-          console.log('成功：', response);
-          alert('最新消息已成功添加！');
-          $form[0].reset();
-          closeModal();
-        },
-        error: function(xhr, status, error) {
-          console.error('錯誤：', status, error);
-          alert('添加失敗，請稍後再試。錯誤：' + error);
-        }
+        "processData": false,
+        "mimeType": "multipart/form-data",
+        "contentType": false,
+        "dataType": 'json',
+        "data": form
+      };
+
+      $.ajax(settings).done(function(response) {
+        //alert(typeof(response));
+        console.log(response);
+        alert(response.file_url);
+
+        var formData = {
+          title: $('input[name="newsTitle"]').val(),
+          description: $('textarea[name="newsDescription"]').val(),
+          imgUrl: response.file_url,
+        };
+
+        console.log('處理後的數據:', formData);
+        /**
+         * 新增最新消息開始
+         */
+        $.ajax({
+          url: 'https://u-shane.fun:3000/news', // 假設這是新聞添加的API端點
+          type: 'POST',
+          contentType: 'application/json',
+          headers: {
+            "authorization": "ian-test"
+          },
+          data: JSON.stringify(formData),
+          success: function(response) {
+            console.log('成功：', response);
+            alert('最新消息已成功添加！');
+            $form[0].reset();
+            closeModal();
+          },
+          error: function(xhr, status, error) {
+            console.error('錯誤：', status, error);
+            alert('添加失敗，請稍後再試。錯誤：' + error);
+          }
+        });
+        /**
+         * 新增最新消息結束
+         */
       });
-      /**
-       * 新增最新消息結束
-       */
     });
 
     /** 表格二: 最新消息視窗(編輯)
@@ -531,7 +605,17 @@
     document.querySelectorAll('#min, #max').forEach((el) => {
       el.addEventListener('change', () => table.draw());
     });
-  });
-</script>
+  
+
+  // 漢堡表單
+  // 新增用於切換側邊欄的函數
+  function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('active');
+  }
+
+  // 為漢堡菜單按鈕添加事件監聽器
+  document.querySelector('.menu-toggle').addEventListener('click', toggleSidebar);
+});
+  </script>
 
 </html>

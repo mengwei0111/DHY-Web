@@ -3,10 +3,10 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" href="/favicon.ico" />
+
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>後台登入</title>
+  <title>維修中心</title>
   <link rel="stylesheet" href="scss/main.scss">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
@@ -110,25 +110,25 @@
     <form class="space-y-6" id="maintenanceForm">
       <div class="flex flex-col sm:flex-row sm:items-center">
         <label for="reporter" class="w-1/4 block text-sm font-medium text-gray-700 mb-1 sm:mb-0 ">申報人</label>
-        <input type="text" id="reporter" name="reporter" class="flex-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <input type="text" id="reporter" name="reporter" class="flex-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
       </div>
 
 
 
       <div class="flex flex-col sm:flex-row sm:items-center">
         <label for="repair-item" class="w-1/4 block text-sm font-medium text-gray-700 sm:mb-0 mb-1">聯絡電話</label>
-        <input type="text" id="repair-item" name="phone" class="flex-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <input type="text" id="repair-item" name="phone" class="flex-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
       </div>
 
       <div class="flex flex-col sm:flex-row sm:items-center">
         <label for="repair-item" class="w-1/4 block text-sm font-medium text-gray-700 sm:mb-0 mb-1">維修事項</label>
-        <input type="text" id="repair-item" name="item" class="flex-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <input type="text" id="repair-item" name="item" class="flex-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
       </div>
 
 
       <div class="flex flex-col sm:flex-row">
         <label for="repair-reason" class="sm:w-1/4 text-sm font-medium text-gray-700 mb-1 sm:mb-0 sm:pt-2">維修原因</label>
-        <textarea id="repair-reason" name="reason" rows="4" class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+        <textarea id="repair-reason" name="reason" rows="4" class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required></textarea>
       </div>
 
       <div class="flex justify-end space-x-4">
