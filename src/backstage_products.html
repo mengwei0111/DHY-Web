@@ -7,9 +7,12 @@
   <title>後台</title>
   <link rel="stylesheet" href="scss/main.scss">
   <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/datetime/1.5.3/css/dataTables.dateTime.min.css" />
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+  <script src="https://cdn.datatables.net/datetime/1.5.3/js/dataTables.dateTime.min.js"></script>
 
 </head>
 
@@ -28,9 +31,7 @@
 
   .sidebar {
     width: 256px;
-    /* w-64 等價於 16rem 或 256px */
     background-color: #1e3a8a;
-    /* bg-blue-900 */
     color: white;
     padding: 1rem;
     flex-shrink: 0;
@@ -41,6 +42,7 @@
     overflow-y: auto;
     padding: 1rem;
     background-color: #f3f4f6;
+    /* bg-gray-100 */
   }
 
   .submenu {
@@ -52,10 +54,90 @@
   .submenu.active {
     max-height: 500px;
   }
+
+  #myTable thead th {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    background-color: #f3f4f6;
+    padding: 10px;
+    font-weight: bold;
+  }
+
+
+  #myTable th {
+    max-width: 300px;
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+
+  #myTable {
+    width: 100%;
+  }
+
+  .dataTables_wrapper {
+    overflow-x: auto;
+  }
+
+  /* 響應式調整 */
+  @media screen and (max-width: 640px) {
+    #myTable thead th {
+      font-size: 14px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .layout-container {
+      flex-direction: column;
+    }
+
+    .sidebar {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: -100%;
+      height: 100vh;
+      z-index: 1000;
+      transition: left 0.3s ease;
+    }
+
+    .sidebar.active {
+      left: 0;
+    }
+
+
+
+    @media screen and (max-width: 768px) {
+
+      .sidebar {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        height: 100vh;
+        width: 250px;
+        transition: left 0.3s ease;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+    }
+  }
 </style>
 
 
 <body>
+  <button class="block md:hidden  fixed top-[30px] left-[10px] z-[1001] bg-transparent border-0 text-2xl text-black cursor-pointer menu-toggle">
+    ☰
+  </button>
   <div class="flex layout-container ">
     <div class="w-64 bg-blue-900 text-white p-4 sidebar">
       <div class="mb-8">
@@ -68,7 +150,7 @@
         <ul>
           <button>
             <a href="./backstage_news.html">
-              <li class="mb-4 ">最新消息</li>
+              <li class="mb-4">最新消息</li>
             </a>
           </button>
           <li class="mb-4">
@@ -96,17 +178,17 @@
               </svg>
             </button>
             <ul class="submenu pl-4 text-sm">
-              <li class="my-4">維修通報管理</li>
+              <a href="./backstage_service.html">
+                <li class="my-4">維修通報管理</li>
+              </a>
             </ul>
           </li>
         </ul>
       </nav>
     </div>
-    <!-- 客服通報 -->
-    <div class="container mx-auto px-4 py-8">
-
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">產品介紹 >玻璃系列</h1>
+    <div class="flex-1 p-8 overflow-auto">
+      <div class="flex justify-between mb-6 ">
+        <h1 class="text-2xl ml-4 font-bold">產品列表</h1>
         <div class="flex space-x-2">
           <!-- 新增按鈕 -->
           <button id="addNewsBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">新增</button>
@@ -116,151 +198,129 @@
         </div>
       </div>
 
+      <table class="border-collapse flex justify-end">
+        <tbody>
+          <tr class="align-middle flex">
+            <td class="pr-2">
+              <label for="min" class="text-gray-700">日期區間:</label>
+            </td>
+            <td class="pr-4">
+              <input id="min" name="min" class="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </td>
+            <td class="pr-2">
+              <label for="max" class="text-gray-700">到:</label>
+            </td>
+            <td>
+              <input id="max" name="max" class="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
 
-
-      <table id="myTable" class="display">
+      <table id="myTable" class="display w-full">
         <thead>
           <tr>
             <th>功能</th>
             <th>產品名稱</th>
+            <th>產品類別</th>
+            <th>產品描述</th>
             <th>上傳圖片</th>
+            <th>注意事項</th>
             <th>建立日期</th>
           </tr>
         </thead>
       </table>
+    </div>
+    <!-- 模態框結構 -->
+    <div id="addNewsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden" x-show="open">
+      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+          <h2 id="model-title" class="text-lg leading-6 font-medium text-gray-900">新增產品</h2>
+          <div class="mt-2 px-7 py-3">
+            <form id="addNewsForm" class="space-y-4">
 
-      <script>
-        $(document).ready(function() {
-          var table;
-          var settings = {
-            "url": "https://u-shane.fun:3000/service",
-            "method": "GET",
-            "timeout": 0,
-            "headers": {
-              "authorization": "ian-test"
-            },
-          };
-          $.ajax(settings).done(function(response) {
-            table = $('#myTable').DataTable({
-              data: response,
-              columns: [{
-                  data: 'name'
-                }, {
-                  data: 'phone'
-                }, {
-                  data: 'matter'
-                }, {
-                  data: 'reason'
-                }, {
-                  data: 'status',
-                  render: function(data, type, row) {
-                    if (type === 'display') {
-                      if (data === true) {
-                        return '<span style="color: green;">已完工</span>';
-                      } else {
-                        return '<span style="color: red;">未完成</span>';
-                      }
-                    }
-                    return data;
-                  }
-                },
-                {
-                  data: 'createdDate',
-                  render: function(data, type, row) {
-                    if (type === 'display' && data) {
-                      return new Date(data).toLocaleString('zh-TW');
-                    }
-                    return data;
-                  }
-                },
-                // {
-                //   data: '_id'
-                // },
-                {
-                  data: null,
-                  render: function(data, type, row) {
-                    return '<button class="edit-btn" data-id="' + data._id + '">狀態更新</button> <button class="delete-btn" data-id="' + data._id + '">刪除</button>';
-                  }
-                }
-              ],
-              language: {
-                "info": "本頁顯示 _START_ 到 _END_ 總共 _TOTAL_ 筆",
-                "search": "搜尋:",
-                "lengthMenu": "顯示 _MENU_ 筆資料",
+              <div>
+                <label for="productName" class=" block text-sm font-medium text-gray-700">產品名稱 *</label>
+                <input type="text" id="productName" name="productName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              </div>
 
-              }
-            });
 
-          });
+              <div>
+                <label for="newsCategory" class=" block text-sm font-medium text-gray-700">產品類別 *</label>
+                <input type="text" id="newsCategory" name="newsCategory" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              </div>
 
-        });
+              <div>
+                <label for="newsDescription" class="block text-sm font-medium text-gray-700">產品描述</label>
+                <textarea id="newsDescription" name="newsDescription" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+              </div>
 
-        // 狀態更新按鈕的事件處理程序
-        $('#myTable').on('click', '.edit-btn', function() {
-          var id = $(this).data('id');
-          var row = $(this).closest('tr');
-
-          if (confirm('確定要將此筆記錄標記為已完工嗎？')) {
-            var updateSettings = {
-              "url": "https://u-shane.fun:3000/service/" + id,
-              "method": "PATCH",
-              "timeout": 0,
-              "headers": {
-                "authorization": "ian-test",
-                "Content-Type": "application/json"
-              },
-              "data": JSON.stringify({
-                status: true
-              })
-            };
-
-            $.ajax(updateSettings)
-              .done(function(response) {
-                console.log('更新成功:', response);
-                // 更新表格中的狀態顯示
-                var cell = table.cell(row, 4);
-                cell.data(true).draw();
-                // 移除狀態更新按鈕
-                $(row).find('.status-btn').remove();
-                alert('狀態已更新為已完工');
-              })
-              .fail(function(jqXHR, textStatus, errorThrown) {
-                alert('更新失敗，請稍後再試');
-              });
-          }
-        });
+              <div>
+                <label for="note" class="block text-sm font-medium text-gray-700">注意事項</label>
+                <textarea id="note" name="note" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+              </div>
 
 
 
+              <div>
+                <label for="newsImage" class="block text-sm font-medium text-gray-700">上傳圖片</label>
+                <input type="file" id="newsImage" name="newsImage" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+              </div>
 
-        $('#myTable').on('click', '.delete-btn', function() {
-          var id = $(this).data('id');
-          var row = $(this).closest('tr');
+              <div class="flex justify-end space-x-3">
+                <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition duration-300" id="cancelBtn">清除</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">送出</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
-          if (confirm('您確定要刪除此筆記錄嗎？')) {
-            var settings = {
-              "url": "https://u-shane.fun:3000/service/" + id, // 使用動態 ID
-              "method": "DELETE",
-              "timeout": 0,
-              "headers": {
-                "authorization": "ian-test" // 請確保這是正確的授權令牌
-              },
-            };
+    <div id="addNewsModal2" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden" x-show="open">
+      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+          <h2 id="model-title" class="text-lg leading-6 font-medium text-gray-900">編輯消息</h2>
+          <div class="mt-2 px-7 py-3">
+            <form id="addNewsForm2" class="space-y-4">
+              <div>
+                <label for="productName2" class=" block text-sm font-medium text-gray-700">產品名稱 *</label>
+                <input type="text" id="productName2" name="productName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              </div>
 
-            $.ajax(settings)
-              .done(function(response) {
-                //console.log('刪除成功:', response);
-                table.row(row).remove().draw(); // 從表格中移除該行
-                alert('記錄已成功刪除');
-              })
-              .fail(function(jqXHR, textStatus, errorThrown) {
-                //console.error('刪除失敗:', textStatus, errorThrown);
-                alert('刪除失敗，請稍後再試');
-              });
-          }
-        });
-      </script>
+
+              <div>
+                <label for="newsCategory2" class=" block text-sm font-medium text-gray-700">產品類別 *</label>
+                <input type="text" id="newsCategory2" name="newsCategory" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+              </div>
+
+              <div>
+                <label for="newsDescription2" class="block text-sm font-medium text-gray-700">產品描述</label>
+                <textarea id="newsDescription2" name="newsDescription" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+              </div>
+
+              <div>
+                <label for="note2" class="block text-sm font-medium text-gray-700">注意事項</label>
+                <textarea id="note2" name="note" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+              </div>
+
+
+              <div>
+                <label for="newsImage2" class="block text-sm font-medium text-gray-700">上傳圖片</label>
+                <textarea id="newsImage2" name="newsImage" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+              </div>
+              <div class="flex justify-end space-x-3">
+                <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition duration-300" id="cancelBtn2">清除</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">送出</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 
 </body>
 
@@ -271,6 +331,341 @@
     const icon = button.querySelector('svg');
     icon.classList.toggle('rotate-180');
   }
+
+  $(document).ready(function() {
+    const $modal = $('#addNewsModal');
+    const $addBtn = $('#addNewsBtn');
+    const $cancelBtn = $('#cancelBtn');
+    const $form = $('#addNewsForm');
+    const $modal2 = $('#addNewsModal2'); //新增最新消息視窗
+    const $cancelBtn2 = $('#cancelBtn2'); // 取消按鈕
+    const $form2 = $('#addNewsForm2'); //新增消息表單
+
+    //載入全部資料
+    var table;
+    var settings = {
+      "url": "https://u-shane.fun:3000/product",
+      "method": "GET",
+      "timeout": 0,
+      "headers": {
+        "authorization": "ian-test"
+      },
+    };
+    $.ajax(settings).done(function(response) {
+      table = $('#myTable').DataTable({
+        autoWidth: true,
+        data: response,
+        columns: [{
+            data: null,
+            render: function(data, type, row) {
+              return '<button class="edit-btn" data-id="' + data._id + '">編輯</button> <button class="delete-btn" data-id="' + data._id + '">刪除</button>';
+            }
+          }, {
+            data: 'name'
+          },
+          {
+            data: 'category'
+          }, {
+            data: 'description'
+          }, {
+            data: "imgUrl",
+            "render": function(data) {
+              //   console.log(data);
+              return '<img src="' + data + '" width="100px" alt="圖片">';
+            }
+          }, {
+            data: "note"
+          }, {
+            data: 'createdDate',
+            render: function(data, type, row) {
+              if (type === 'display' && data) {
+                return new Date(data).toLocaleString('zh-TW');
+              }
+              return data;
+            }
+          },
+          // {
+          //   data: '_id'
+          // },
+
+        ],
+        language: {
+          "info": "本頁顯示 _START_ 到 _END_ 總共 _TOTAL_ 筆",
+          "search": "搜尋:",
+          "lengthMenu": "顯示 _MENU_ 筆資料",
+        }
+      });
+    });
+
+    // 編輯資料
+    $('#myTable').on('click', '.edit-btn', function() {
+      var id = $(this).data('id');
+      var settings = {
+        "url": "https://u-shane.fun:3000/product/" + id,
+        "method": "GET",
+        "timeout": 0,
+        "headers": {
+          "authorization": "ian-test"
+        },
+
+      };
+      $modal2.removeClass('hidden');
+
+      $.ajax(settings).done(function(response) {
+        var name = response.productName;
+        var category = response.category;
+        var description = response.description;
+        var imgUrl = response.imgUrl;
+        var note = response.note;
+
+        $('#productName2').val(response.name);
+        $('#newsCategory2').val(response.category);
+        $('#newsDescription2').val(response.description);
+        $('#newsImage2').val(response.imgUrl);
+        $('#note2').val(response.note);
+        $('#addNewsForm2').data('editId', id);
+        console.log('ID 已存到表單:', id);
+
+      });
+    });
+
+    //刪除資料
+    $('#myTable').on('click', '.delete-btn', function() {
+      var id = $(this).data('id');
+      var row = $(this).closest('tr');
+
+      if (confirm('您確定要刪除此筆記錄嗎？')) {
+        var settings = {
+          "url": "https://u-shane.fun:3000/product/" + id, // 使用動態 ID
+          "method": "DELETE",
+          "timeout": 0,
+          "headers": {
+            "authorization": "ian-test"
+          },
+        };
+
+        $.ajax(settings)
+          .done(function(response) {
+            //console.log('刪除成功:', response);
+            table.row(row).remove().draw(); // 從表格中移除該行
+            alert('記錄已成功刪除');
+          })
+          .fail(function(jqXHR, textStatus, errorThrown) {
+            //console.error('刪除失敗:', textStatus, errorThrown);
+            alert('刪除失敗，請稍後再試');
+          });
+      }
+    });
+
+
+    /**
+     * 新增更新視窗控制區
+     * 
+     * **/
+
+    /** 表格一: 最新消息視窗(新增)
+     * 
+     * */
+    // 打開最新消息視窗(新增)
+    $addBtn.on('click', function() {
+      $modal.removeClass('hidden');
+    });
+
+    // 關閉最新消息視窗(新增)
+    function closeModal() {
+      $modal.addClass('hidden');
+    }
+
+    // 點擊外部區塊關閉視窗
+    $modal.on('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // 按下取消按鈕
+    $cancelBtn.on('click', function() {
+      $form[0].reset();
+      closeModal();
+    });
+
+    //按下送出表單
+    $form.on('submit', function(e) {
+      e.preventDefault();
+      console.log('表單提交被觸發');
+
+      // 圖片上傳
+      var fileInput = $('#newsImage')[0];
+      var file = fileInput.files[0];
+      var form = new FormData();
+      form.append("file", file);
+      alert('1');
+
+      var settings = {
+        "url": "https://u-shane.fun:3000/upload",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
+          "authorization": "ian-test"
+        },
+        "processData": false,
+        "mimeType": "multipart/form-data",
+        "contentType": false,
+        "dataType": 'json',
+        "data": form
+      };
+      alert('2');
+
+      $.ajax(settings).done(function(response) {
+        //alert(typeof(response));
+        console.log(response);
+        alert(response.file_url);
+
+        var formData = {
+          name: $('input[name=productName]').val(),
+          category: $('input[name="newsCategory"]').val(),
+          description: $('textarea[name="newsDescription"]').val(),
+          imgUrl: response.file_url,
+          note: $('textarea[name="note"]').val(),
+
+        };
+
+        console.log('處理後的數據:', formData);
+        alert('3');
+
+        /**
+         * 新增最新消息開始
+         */
+        $.ajax({
+          url: 'https://u-shane.fun:3000/product/', // 假設這是新聞添加的API端點
+          type: 'POST',
+          contentType: 'application/json',
+          headers: {
+            "authorization": "ian-test"
+          },
+          data: JSON.stringify(formData),
+          success: function(response) {
+            console.log('成功：', response);
+            alert('產品訊息已成功添加！');
+            $form[0].reset();
+            closeModal();
+          },
+          error: function(xhr, status, error) {
+            console.error('錯誤：', status, error);
+            alert('添加失敗，請稍後再試。錯誤：' + error);
+          }
+        });
+        /**
+         * 新增最新消息結束
+         */
+      });
+    });
+
+    /** 表格二: 產品列表視窗(編輯)
+     * 
+     * */
+    // 關閉產品列表視窗
+    function closeModal2() {
+      $modal2.addClass('hidden');
+    }
+
+    // 點擊外部區塊關閉視窗
+    $modal2.on('click', function(e) {
+      if (e.target === this) {
+        closeModal2();
+      }
+    });
+
+    // 取消按鈕
+    $cancelBtn2.on('click', function() {
+      $form2[0].reset();
+      closeModal2();
+    });
+
+    // 表單提交
+    $form2.on('submit', function(e) {
+      e.preventDefault();
+      console.log('表單提交被觸發');
+      var id = $(this).data('editId');
+      var formData = {
+        name: $('#productName2').val(),
+        category: $('#newsCategory2').val(),
+        description: $('#newsDescription2').val(),
+        note: $('#note2').val(),
+        imgUrl: $('#newsImage2').val(),
+
+      };
+      console.log("產品名稱:", $('#productName2').val());
+      console.log("類別", $('#newsCategory2').val(), )
+      console.log('當前編輯ID:', id);
+      console.log('處理後的數據:', formData);
+
+      $.ajax({
+        url: 'https://u-shane.fun:3000/product/' + id,
+        type: 'PATCH',
+        contentType: 'application/json',
+        headers: {
+          "authorization": "ian-test"
+        },
+        data: JSON.stringify(formData),
+        success: function(response) {
+          console.log('成功：', response);
+          alert('產品已編輯完成！');
+          var row = table.row($('.edit-btn[data-id="' + id + '"]').closest('tr'));
+          row.data(response).draw();
+          $form2[0].reset();
+          closeModal2();
+        },
+        error: function(xhr, status, error) {
+          console.error('錯誤：', status, error);
+          alert('編輯失敗，請稍後再試。錯誤：' + error);
+        }
+      });
+    });
+
+    //日期選擇
+    let minDate, maxDate;
+
+    // Custom filtering function which will search data in column four between two values
+    DataTable.ext.search.push(function(settings, data, dataIndex) {
+      let min = minDate.val();
+      let max = maxDate.val();
+      let date = new Date(data[4]);
+
+      if (
+        (min === null && max === null) ||
+        (min === null && date <= max) ||
+        (min <= date && max === null) ||
+        (min <= date && date <= max)
+      ) {
+        return true;
+      }
+      return false;
+    });
+
+    // Create date inputs
+    minDate = new DateTime('#min', {
+      format: 'YYYY-MM-DD'
+    });
+    maxDate = new DateTime('#max', {
+      format: 'YYYY-MM-DD'
+    });
+
+    // Refilter the table
+    document.querySelectorAll('#min, #max').forEach((el) => {
+      el.addEventListener('change', () => table.draw());
+    });
+
+
+    // 漢堡表單
+    // 新增用於切換側邊欄的函數
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('active');
+    }
+
+    // 為漢堡菜單按鈕添加事件監聽器
+    document.querySelector('.menu-toggle').addEventListener('click', toggleSidebar);
+  });
 </script>
 
 </html>
