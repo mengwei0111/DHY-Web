@@ -8,7 +8,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>產品介紹</title>
   <link rel="stylesheet" href="scss/main.scss">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+  <script>
+    $(document).ready(function() {
+      // 為所有帶有 category-btn class 的按鈕添加點擊事件
+      $('.category-btn').on('click', function() {
+        // 獲取按鈕的 data-category 屬性值
+        var categoryNumber = $(this).data('category');
+
+        updateProduct(categoryNumber);
+        // 顯示對應的數字
+      });
+
+      //依據分類更新商品
+      function updateProduct(category) {
+        $.ajax({
+            method: "GET",
+            url: "https://u-shane.fun:3000/product/category/" + category,
+            headers: {
+              "authorization": "ian-test"
+            },
+            dataType: 'json'
+          })
+          .done(function(msg) {
+            // 資料載入
+            var $productContainer = $('.product-container');// 清空現有的產品列表
+              $productContainer.empty();
+
+            if (Array.isArray(msg) && msg.length > 0) {
+            
+              // 遍歷所有產品並添加到頁面
+              msg.forEach(function(product) {
+                var productHtml = `
+            <div class="border border-gray-200 rounded-lg overflow-hidden bg-white">
+              <div>
+                <img src="${product.imgUrl}" alt="${product.name}" class="object-contain h-[200px]">
+              </div>
+              <div class="p-3 lg:p-4">
+                <h3 class="font-bold mb-2 text-sm lg:text-base">${product.name}</h3>
+                <p class="text-xs lg:text-sm text-gray-600 mb-2 lg:mb-4">${product.description}</p>
+                <a href="./product_details.html" class="text-blue-600 hover:underline text-xs lg:text-sm">Read more</a>
+              </div>
+            </div>
+          `;
+                $productContainer.append(productHtml);
+              });
+            }
+          })
+          .fail(function(jqXHR, textStatus, errorThrown) {
+            console.error('請求失敗:', textStatus, errorThrown);
+          });
+      }
+
+      // 初始載入第一個類別的數據
+      updateProduct("1");
+    });
+  </script>
 </head>
+
 
 <body>
 
@@ -40,54 +98,23 @@
 
   <div class="mb-8 ml-8">
     <div class="flex space-x-4 ">
-      <button class="text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded">玻璃系列</button>
-      <button class="text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded">淋浴設備</button>
-      <button class="text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded">衛浴設備</button>
-      <button class="text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded">曬衣架</button>
-      <button class="text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded">隔音地板</button>
-      <button class="text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded">VAF</button>
+      <button class="category-btn text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded" data-category="1">玻璃系列</button>
+      <button class="category-btn text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded" data-category="2">淋浴設備</button>
+      <button class="category-btn text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded" data-category="3">衛浴設備</button>
+      <button class="category-btn text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded" data-category="4">曬衣架</button>
+      <button class="category-btn text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded" data-category="5">隔音地板</button>
+      <button class="category-btn text-xl font-bold px-4 py-2 hover:underline text-gray-800 rounded" data-category="6">VAF</button>
     </div>
   </div>
 
-
-
-  <% 
-  // 定義12張不同圖片的數組
-  var images = [
-      './img/img/picture/product/1M5A0280.jpg',
-      './img/img/picture/product/1M5A0281.jpg',
-      './img/img/picture/product/1M5A0282.jpg',
-      './img/img/picture/product/1M5A0283.jpg',
-      './img/img/picture/product/1M5A0284.jpg',
-      './img/img/picture/product/1M5A0285.jpg',
-      './img/img/picture/product/1M5A0286.jpg',
-      './img/img/picture/product/1M5A0287.jpg',
-      './img/img/picture/product/1M5A0288.jpg',
-      './img/img/picture/product/1M5A0289.jpg',
-      './img/img/picture/product/1M5A0291.jpg',
-      './img/img/picture/product/1M5A0293.jpg'
-  ];
-  %>
-
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="max-w-screen-xl mx-auto">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-3">
-        <% for (var i=0; i < 12; i++) { %>
-        <div class="border border-gray-200 rounded-lg overflow-hidden bg-white w-full">
-          <div class="aspect-w-16 aspect-h-9">
-            <img src="<%= images[i] %>" alt="產品圖片 <%= i + 1 %>" class="w-full h-full object-contain">
-          </div>
-          <div class="p-3 lg:p-4">
-            <h3 class="font-bold mb-2 text-sm lg:text-base">產品名稱</h3>
-            <p class="text-xs lg:text-sm text-gray-600 mb-2 lg:mb-4">
-              產品內容文字產品內容文字產品內容文字產品內容文字，可加文字在這裡</p>
-            <a href="#" class="text-blue-600 hover:underline text-xs lg:text-sm">Read more</a>
-          </div>
-        </div>
-        <% } %>
+      <div class="product-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-3">
+
       </div>
     </div>
   </div> <%- include("include/footer")%>
+
 
 
 </body>

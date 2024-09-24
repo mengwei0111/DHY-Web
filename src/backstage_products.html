@@ -13,6 +13,7 @@
   <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
   <script src="https://cdn.datatables.net/datetime/1.5.3/js/dataTables.dateTime.min.js"></script>
+  <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 
 </head>
 
@@ -31,7 +32,7 @@
 
   .sidebar {
     width: 256px;
-    background-color: #1e3a8a;
+    background-color: #174C74;
     color: white;
     padding: 1rem;
     flex-shrink: 0;
@@ -161,13 +162,9 @@
               </svg>
             </button>
             <ul class="submenu pl-4 text-sm">
-              <li class="my-4">玻璃系列</li>
-              <li class="my-4">淋浴設備</li>
-              <li class="my-4">衛浴設備</li>
-              <li class="my-4">曬衣架</li>
-              <li class="my-4">隔音地板</li>
-              <li class="my-4">VAF</li>
-
+              <li class="my-4">
+                <a href="./backstage_products.html">產品資訊管理</a>
+              </li>
             </ul>
           </li>
           <li>
@@ -178,9 +175,9 @@
               </svg>
             </button>
             <ul class="submenu pl-4 text-sm">
-              <a href="./backstage_service.html">
-                <li class="my-4">維修通報管理</li>
-              </a>
+              <li class="my-4">
+                <a href="./backstage_service.html">维修通报管理</a>
+              </li>
             </ul>
           </li>
         </ul>
@@ -234,91 +231,107 @@
     </div>
     <!-- 模態框結構 -->
     <div id="addNewsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden" x-show="open">
-      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div class="mt-3 text-center">
-          <h2 id="model-title" class="text-lg leading-6 font-medium text-gray-900">新增產品</h2>
-          <div class="mt-2 px-7 py-3">
-            <form id="addNewsForm" class="space-y-4">
+      <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">編輯產品</h2>
+          <form id="addNewsForm" class="space-y-6">
+            <div>
+              <label for="productName" class="block text-sm font-medium text-gray-700">產品名稱 *</label>
+              <input type="text" id="productName" name="productName" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
 
-              <div>
-                <label for="productName" class=" block text-sm font-medium text-gray-700">產品名稱 *</label>
-                <input type="text" id="productName" name="productName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-              </div>
+            <div>
+              <label for="newsCategory" class="block text-sm font-medium text-gray-700">產品類別 *</label>
+              <select id="newsCategory" name="newsCategory" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="">請選擇類別</option>
+                <option value="1">玻璃系列</option>
+                <option value="2">淋浴設備</option>
+                <option value="3">衛浴設備</option>
+                <option value="4">曬衣架</option>
+                <option value="5">隔音地板</option>
+                <option value="6">VAF</option>
+              </select>
+            </div>
 
+            <div>
+              <label for="newsDescription" class="block text-sm font-medium text-gray-700">產品描述</label>
+              <textarea id="newsDescription" name="newsDescription" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
 
-              <div>
-                <label for="newsCategory" class=" block text-sm font-medium text-gray-700">產品類別 *</label>
-                <input type="text" id="newsCategory" name="newsCategory" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-              </div>
+            <div>
+              <label for="note" class="block text-sm font-medium text-gray-700">注意事項</label>
+              <textarea id="note" name="note" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
 
-              <div>
-                <label for="newsDescription" class="block text-sm font-medium text-gray-700">產品描述</label>
-                <textarea id="newsDescription" name="newsDescription" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-              </div>
+            <div>
+              <label for="newsImage" class="block text-sm font-medium text-gray-700">上傳圖片</label>
+              <input type="file" id="newsImage" name="newsImage" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            </div>
 
-              <div>
-                <label for="note" class="block text-sm font-medium text-gray-700">注意事項</label>
-                <textarea id="note" name="note" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-              </div>
-
-
-
-              <div>
-                <label for="newsImage" class="block text-sm font-medium text-gray-700">上傳圖片</label>
-                <input type="file" id="newsImage" name="newsImage" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-              </div>
-
-              <div class="flex justify-end space-x-3">
-                <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition duration-300" id="cancelBtn">清除</button>
-                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">送出</button>
-              </div>
-            </form>
-          </div>
+            <div class="flex justify-end space-x-3 mt-6">
+              <button type="button" id="cancelBtn2" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">清除</button>
+              <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">送出</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
 
+    <script>
+      CKEDITOR.replace('newsDescription');
+    </script>
+    <!-- Model2 -->
     <div id="addNewsModal2" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden" x-show="open">
-      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div class="mt-3 text-center">
-          <h2 id="model-title" class="text-lg leading-6 font-medium text-gray-900">編輯消息</h2>
-          <div class="mt-2 px-7 py-3">
-            <form id="addNewsForm2" class="space-y-4">
-              <div>
-                <label for="productName2" class=" block text-sm font-medium text-gray-700">產品名稱 *</label>
-                <input type="text" id="productName2" name="productName" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-              </div>
+      <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">編輯產品</h2>
+          <form id="addNewsForm2" class="space-y-6">
+            <div>
+              <label for="productName2" class="block text-sm font-medium text-gray-700">產品名稱 *</label>
+              <input type="text" id="productName2" name="productName" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
 
+            <div>
+              <label for="newsCategory2" class="block text-sm font-medium text-gray-700">產品類別 *</label>
+              <select id="newsCategory2" name="newsCategory" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="">請選擇類別</option>
+                <option value="1">玻璃系列</option>
+                <option value="2">淋浴設備</option>
+                <option value="3">衛浴設備</option>
+                <option value="4">曬衣架</option>
+                <option value="5">隔音地板</option>
+                <option value="6">VAF</option>
+              </select>
+            </div>
 
-              <div>
-                <label for="newsCategory2" class=" block text-sm font-medium text-gray-700">產品類別 *</label>
-                <input type="text" id="newsCategory2" name="newsCategory" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-              </div>
+            <div>
+              <label for="newsDescription2" class="block text-sm font-medium text-gray-700">產品描述</label>
+              <textarea id="newsDescription2" name="newsDescription2" rows="4" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
 
-              <div>
-                <label for="newsDescription2" class="block text-sm font-medium text-gray-700">產品描述</label>
-                <textarea id="newsDescription2" name="newsDescription" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-              </div>
+            <div>
+              <label for="note2" class="block text-sm font-medium text-gray-700">注意事項</label>
+              <textarea id="note2" name="note" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
 
-              <div>
-                <label for="note2" class="block text-sm font-medium text-gray-700">注意事項</label>
-                <textarea id="note2" name="note" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-              </div>
+            <div>
+              <label for="newsImage2" class="block text-sm font-medium text-gray-700">上傳圖片</label>
+              <input type="file" id="newsImage2" name="newsImage" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            </div>
 
-
-              <div>
-                <label for="newsImage2" class="block text-sm font-medium text-gray-700">上傳圖片</label>
-                <textarea id="newsImage2" name="newsImage" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-              </div>
-              <div class="flex justify-end space-x-3">
-                <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition duration-300" id="cancelBtn2">清除</button>
-                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">送出</button>
-              </div>
-            </form>
-          </div>
+            <div class="flex justify-end space-x-3 mt-6">
+              <button type="button" id="cancelBtn2" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">清除</button>
+              <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">送出</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+
+    <script>
+      CKEDITOR.replace('newsDescription2');
+    </script>
+  </div>
 
 
 
@@ -364,8 +377,20 @@
             data: 'name'
           },
           {
-            data: 'category'
-          }, {
+            data: 'category',
+            render: function(data, type, row) {
+              var categories = {
+                '1': '玻璃系列',
+                '2': '淋浴設備',
+                '3': '衛浴設備',
+                '4': '曬衣架',
+                '5': '隔音地板',
+                '6': 'VAF'
+              };
+              return categories[data] || data;
+            }
+          },
+          {
             data: 'description'
           }, {
             data: "imgUrl",
@@ -419,8 +444,8 @@
         var note = response.note;
 
         $('#productName2').val(response.name);
-        $('#newsCategory2').val(response.category);
-        $('#newsDescription2').val(response.description);
+        $('#newsCategory2').val(response.category); // 設置下拉選單的值
+        CKEDITOR.instances.newsDescription2.setData(response.description);
         $('#newsImage2').val(response.imgUrl);
         $('#note2').val(response.note);
         $('#addNewsForm2').data('editId', id);
@@ -499,7 +524,6 @@
       var file = fileInput.files[0];
       var form = new FormData();
       form.append("file", file);
-      alert('1');
 
       var settings = {
         "url": "https://u-shane.fun:3000/upload",
@@ -514,16 +538,15 @@
         "dataType": 'json',
         "data": form
       };
-      alert('2');
 
       $.ajax(settings).done(function(response) {
         //alert(typeof(response));
         console.log(response);
-        alert(response.file_url);
+        // alert(response.file_url);
 
         var formData = {
           name: $('input[name=productName]').val(),
-          category: $('input[name="newsCategory"]').val(),
+          category: $('select[name="newsCategory"]').val(),
           description: $('textarea[name="newsDescription"]').val(),
           imgUrl: response.file_url,
           note: $('textarea[name="note"]').val(),
@@ -531,7 +554,6 @@
         };
 
         console.log('處理後的數據:', formData);
-        alert('3');
 
         /**
          * 新增最新消息開始
@@ -590,7 +612,7 @@
       var formData = {
         name: $('#productName2').val(),
         category: $('#newsCategory2').val(),
-        description: $('#newsDescription2').val(),
+        description: CKEDITOR.instances.newsDescription2.getData(),
         note: $('#note2').val(),
         imgUrl: $('#newsImage2').val(),
 
