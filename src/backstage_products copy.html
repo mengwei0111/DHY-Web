@@ -288,12 +288,12 @@
           <form id="addNewsForm2" class="space-y-6">
             <div>
               <label for="productName2" class="block text-sm font-medium text-gray-700">產品名稱 *</label>
-              <input type="text" id="productName2" name="productName2" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+              <input type="text" id="productName2" name="productName" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <div>
               <label for="newsCategory2" class="block text-sm font-medium text-gray-700">產品類別 *</label>
-              <select id="newsCategory2" name="newsCategory2" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+              <select id="newsCategory2" name="newsCategory" required class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                 <option value="">請選擇類別</option>
                 <option value="1">玻璃系列</option>
                 <option value="2">淋浴設備</option>
@@ -311,13 +311,13 @@
 
             <div>
               <label for="note2" class="block text-sm font-medium text-gray-700">注意事項</label>
-              <textarea id="note2" name="note2" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+              <textarea id="note2" name="note" rows="3" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
             </div>
 
             <div>
               <label for="newsImage2" class="block text-sm font-medium text-gray-700">上傳圖片</label>
               <input type="file" id="newsImage2" name="newsImage" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-              <input type="hidden" id="Url" value="">
+              <input type="hidden" id="Url">
             </div>
 
             <div class="flex justify-end space-x-3 mt-6">
@@ -447,7 +447,7 @@
         $('#productName2').val(response.name);
         $('#newsCategory2').val(response.category); // 設置下拉選單的值
         CKEDITOR.instances.newsDescription2.setData(response.description);
-        $('#Url').val(response.imgUrl);
+         $('#Url').val(response.imgUrl);
         //console.log(response.imgUrl);
         //console.log('#newsImage2');
         $('#note2').val(response.note);
@@ -609,79 +609,78 @@
 
     // 表單提交
     $form2.on('submit', function(e) {
-      e.preventDefault();
-      var id = $(this).data('editId');
-      var fileInput = $('#newsImage2')[0];
-      var file = fileInput.files[0];
+  e.preventDefault();
+  var id = $(this).data('editId');
+  var fileInput = $('#newsImage2')[0];
+  var file = fileInput.files[0];
 
-      if (file) {
-        //判斷有檔案的時候執行圖片轉網址
-        //換圖片
-        var form = new FormData();
-        form.append("file", file);
+  // 準備基本的表單數據
+  var formData = {
+    name: $('input[name=productName2]').val(),
+    category: $('select[name="newsCategory2"]').val(),
+    description: CKEDITOR.instances.newsDescription2.getData(),
+    note: $('textarea[name="note2"]').val(),
+    imgUrl: $('#Url').val() // 默認使用現有的URL
+  };
 
-        var settings = {
-          "url": "https://u-shane.fun:3000/upload",
-          "method": "POST",
-          "timeout": 0,
-          "headers": {
-            "authorization": "ian-test"
-          },
-          "processData": false,
-          "mimeType": "multipart/form-data",
-          "contentType": false,
-          "dataType": 'json',
-          "data": form
-        };
+  // 如果選擇了新文件，則上傳
+  if (file) {
+    var uploadFormData = new FormData();
+    uploadFormData.append("file", file);
 
-        $.ajax(settings).done(function(response) {
-          //alert(typeof(response));
-          //console.log(response);
-          //alert(response.file_url);
-          updateProduct(response.file_url);
-        });
-
-
-      } else { //未換圖片
-        updateProduct($('#Url').val());
+    $.ajax({
+      url: "https://u-shane.fun:3000/upload",
+      method: "POST",
+      timeout: 0,
+      headers: {
+        "authorization": "ian-test"
+      },
+      processData: false,
+      contentType: false,
+      dataType: 'json',
+      data: uploadFormData,
+      success: function(response) {
+        if (response && response.file_url) {
+          formData.imgUrl = response.file_url;
+        } else {
+          alert('圖片上傳失敗，將使用原有圖片');
+        }
+        updateProduct(id, formData);
+      },
+      error: function(xhr, status, error) {
+        console.error('圖片上傳失敗:', error);
+        alert('圖片上傳失敗，將使用原有圖片');
+        updateProduct(id, formData);
       }
-
-      function updateProduct(imgUrlStr) {
-        //alert(imgUrlStr);
-        var formData = {
-          name: $('input[name=productName2]').val(),
-          category: $('select[name="newsCategory2"]').val(),
-          description: CKEDITOR.instances.newsDescription2.getData(),
-          imgUrl: imgUrlStr,
-          note: $('textarea[name="note2"]').val(),
-
-        };
-
-        $.ajax({
-          url: 'https://u-shane.fun:3000/product/' + id,
-          type: 'PATCH',
-          contentType: 'application/json',
-          headers: {
-            "authorization": "ian-test"
-          },
-          data: JSON.stringify(formData),
-          success: function(response) {
-            //console.log('成功：', response);
-            alert('產品已編輯完成！');
-            var row = table.row($('.edit-btn[data-id="' + id + '"]').closest('tr'));
-            row.data(response).draw();
-            $form2[0].reset();
-            closeModal2();
-          },
-          error: function(xhr, status, error) {
-            console.error('錯誤：', status, error);
-            alert('編輯失敗，請稍後再試。錯誤：' + error);
-          }
-        });
-      }
-
     });
+  } else {
+    // 如果沒有選擇新文件，直接更新產品信息
+    updateProduct(id, formData);
+  }
+});
 
+function updateProduct(id, formData) {
+  $.ajax({
+    url: 'https://u-shane.fun:3000/product/' + id,
+    type: 'PATCH',
+    contentType: 'application/json',
+    headers: {
+      "authorization": "ian-test"
+    },
+    data: JSON.stringify(formData),
+    success: function(response) {
+      alert('產品已編輯完成！');
+      var row = table.row($('.edit-btn[data-id="' + id + '"]').closest('tr'));
+      row.data(response).draw();
+      $form2[0].reset();
+      closeModal2();
+    },
+    error: function(xhr, status, error) {
+      console.error('錯誤：', status, error);
+      alert('編輯失敗，請稍後再試。錯誤：' + error);
+    }
+  });
+}
     //日期選擇
     let minDate, maxDate;
 
