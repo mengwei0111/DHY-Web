@@ -33,11 +33,11 @@
           })
           .done(function(msg) {
             // 資料載入
-            var $productContainer = $('.product-container');// 清空現有的產品列表
-              $productContainer.empty();
+            var $productContainer = $('.product-container'); // 清空現有的產品列表
+            $productContainer.empty();
 
             if (Array.isArray(msg) && msg.length > 0) {
-            
+
               // 遍歷所有產品並添加到頁面
               msg.forEach(function(product) {
                 var productHtml = `
@@ -48,10 +48,11 @@
               <div class="p-3 lg:p-4">
                 <h3 class="font-bold mb-2 text-sm lg:text-base">${product.name}</h3>
                 <p class="text-xs lg:text-sm text-gray-600 mb-2 lg:mb-4">${product.description}</p>
-                <a href="./product_details.html" class="text-blue-600 hover:underline text-xs lg:text-sm">Read more</a>
+                <a href="./product_details.html?id=${product._id}" class="text-blue-600 hover:underline text-xs lg:text-sm">Read more</a>
               </div>
             </div>
           `;
+                // alert(product.category);
                 $productContainer.append(productHtml);
               });
             }
@@ -79,10 +80,6 @@
     <div class="relative  max-w-7xl mx-auto  py-2 px-4 sm:py-32 sm:px-6 lg:px-8">
       <div class="py-6 text-5xl bg-black bg-opacity-50 text-white  text-center  items-center justify-center">
         產品介紹
-        <div class="h-px mx-auto bg-white w-2/3 my-4"></div>
-        <div class="text-3xl">
-          衛浴設備
-        </div>
       </div>
     </div>
   </div>
@@ -92,7 +89,6 @@
     <nav class="text-sm mb-6 ml-8">
       <a href="#" class="text-gray-600 hover:underline">首頁</a> &gt;
       <a href="#" class="text-gray-600 hover:underline">產品介紹</a> &gt;
-      <span class="text-gray-800">衛浴設備</span>
     </nav>
   </div>
 

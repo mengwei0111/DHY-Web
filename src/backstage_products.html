@@ -269,7 +269,7 @@
             </div>
 
             <div class="flex justify-end space-x-3 mt-6">
-              <button type="button" id="cancelBtn2" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">清除</button>
+              <button type="button" id="cancelBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">清除</button>
               <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">送出</button>
             </div>
           </form>
@@ -604,6 +604,7 @@
     // 取消按鈕
     $cancelBtn2.on('click', function() {
       $form2[0].reset();
+      CKEDITOR.instances.newsDescription2.setData('');
       closeModal2();
     });
 

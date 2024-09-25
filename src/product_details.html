@@ -10,9 +10,6 @@
   <link rel="stylesheet" href="scss/main.scss">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-
-
-
 </head>
 
 <body>
@@ -24,8 +21,8 @@
       <div class="absolute inset-0 " aria-hidden="true"></div>
     </div>
     <div class="relative  max-w-7xl mx-auto  py-2 px-4 sm:py-32 sm:px-6 lg:px-8">
-      <div class="py-6 text-5xl bg-black bg-opacity-50 text-white  text-center  items-center justify-center">
-        玻璃系列
+      <div id="categoryTitles" class="py-6 text-5xl bg-black bg-opacity-50 text-white  text-center  items-center justify-center">
+        <span id="categoryTitle"></span>
       </div>
     </div>
   </div>
@@ -36,7 +33,6 @@
     <nav class="text-sm mb-6">
       <a href="#" class="text-gray-600 hover:text-gray-900">產品介紹</a>
       <span class="mx-2 text-gray-400">&gt;</span>
-      <span class="text-gray-900">沐浴設備</span>
     </nav>
 
 
@@ -44,28 +40,28 @@
       <div class="flex flex-col md:flex-row items-start">
         <!-- 左側圖片區 -->
         <div class="w-full md:w-2/3 mb-6 md:mb-0 md:pr-8">
-          <img src="./img/img/picture/index/產品介紹-淋浴設備banner.jpg" alt="淋浴拉門" class="w-full h-auto object-cover rounded-lg shadow-md">
+          <img id="mainProductImage" src="./img/img/picture/index/產品介紹-淋浴設備banner.jpg" alt="淋浴拉門" class="w-full h-auto object-cover rounded-lg shadow-md">
         </div>
 
         <!-- 右側產品 -->
         <div class="w-full md:w-1/3">
-          <h1 class="text-3xl font-bold text-gray-800 mb-2">淋浴拉門</h1>
-          <p class="text-xl text-gray-600 mb-4">淋浴拉門</p>
+          <h1 id="productName" class="text-3xl font-bold text-gray-800 mb-2">淋浴拉門</h1>
+          <p id="productDescription" class="text-xl text-gray-600 mb-4">淋浴拉門</p>
         </div>
       </div>
 
       <div role="tablist" class="mt-8 tabs tabs-bordered">
-        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="詳細介紹" />
+        <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="產品資訊" />
         <div role="tabpanel" class="tab-content p-10">
           <div class="w-full h-full flex items-center justify-center">
-            <img src="./img/img/picture/product/1M5A0245.jpg" alt="產品詳細圖" class="max-w-full max-h-[70vh] object-contain" />
+            <img id="detailProductImage" src="./img/img/picture/product/1M5A0245.jpg" alt="產品詳細圖" class="max-w-full max-h-[70vh] object-contain" />
           </div>
         </div>
 
         <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="注意事項" checked="checked" />
         <div role="tabpanel" class="tab-content p-10">
           <div class="w-full h-full flex items-center justify-center">
-            <div class="h-[70vh]"></div>
+            <div id="productNote" class="h-[70vh]"></div>
           </div>
         </div>
 
@@ -83,6 +79,56 @@
 
 
 </body>
+
+
+
+<script>
+  $(document).ready(function() {
+    // 從 URL 獲取產品 ID
+    var urlParams = new URLSearchParams(window.location.search);
+    var id = urlParams.get('id');
+
+    if (id) {
+      $.ajax({
+          url: "https://u-shane.fun:3000/product/" + id,
+          method: "GET",
+          headers: {
+            "authorization": "ian-test"
+          },
+          dataType: 'json'
+        })
+        .done(function(product) {
+          //產品類別
+          const categoryTitles = new Map([
+            ["1", "玻璃系列"],
+            ["2", "淋浴設備系列"],
+            ["3", "衛浴設備系列"],
+            ["4", "曬衣架系列"],
+            ["5", "隔音地板系列"],
+            ["6", "VAF系列"],
+
+          ]);
+
+
+          // alert(categoryTitles.get(product.category.toString()));
+          // var str =(product.category).toString();
+          // 更新頁面上的產品詳細信息
+          $('#productName').text(product.name);
+          $('#productDescription').html(product.description);
+          $('#mainProductImage').attr('src', product.imgUrl);
+          $('#detailProductImage').attr('src', product.imgUrl);
+          $('#productNote').html(product.note);
+          $('#categoryTitles').text(categoryTitles.get(product.category.toString()));
+
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+          console.error('請求失敗:', textStatus, errorThrown);
+        });
+    } else {
+      console.error('No product ID provided in the URL');
+    }
+  });
+</script>
 
 
 </html>
